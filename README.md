@@ -28,8 +28,7 @@ Commands are executed using the `redcap` command with a sub-command, e.g.:
 ./manage.py redcap [options] subcommand [args]
 ```
 
-inspect
-~~~~~~~
+**inspect**
 
 ```bash
 ./manage.py redcap inspect path/to/exported/data_dictionary.csv > models.py

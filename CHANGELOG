@@ -1,0 +1,5 @@
+2012-02-25  Byron Ruth  <ruthb@email.chop.edu>
+
+	* `redcap inspect` command. Reads an exported data dictionary from a REDCap
+	project and generates Django models as output. This is similar in concept
+	to Django's `inspectdb` command.

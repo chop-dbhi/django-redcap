@@ -62,10 +62,6 @@ class Command(BaseCommand):
 
     args = 'filename'
 
-    def __init__(self, *args, **kwargs):
-        super(Command, self).__init__(*args, **kwargs)
-        self.form_names = []
-
     def handle(self, filename=None, *args, **options):
         if not filename:
             raise CommandError('Enter a filename')
@@ -92,14 +88,15 @@ class Command(BaseCommand):
 
         table2model = lambda table_name: table_name.title().replace('_', '').replace(' ', '').replace('-', '')
 
-        for i, row in enumerate(reader):
+        prev_table_name = None
+        for row in reader:
             table_name = row['form_name']
 
-            if table_name not in self.form_names:
-                self.form_names.append(table_name)
-                if i != 0:
-                    for meta_line in self.get_meta(table_name):
+            if table_name != prev_table_name:
+                if prev_table_name:
+                    for meta_line in self.get_meta(prev_table_name):
                         yield meta_line
+                prev_table_name = table_name
                 yield 'class %s(models.Model):' % table2model(table_name)
 
             column_name = row['field_name']
@@ -164,7 +161,7 @@ class Command(BaseCommand):
             yield '    %s' % field_desc
 
         # Output the final Meta class
-        if self.form_names:
+        if prev_table_name:
             for meta_line in self.get_meta(table_name):
                 yield meta_line
 

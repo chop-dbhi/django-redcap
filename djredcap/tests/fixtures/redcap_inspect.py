@@ -43,7 +43,7 @@ class Demographics(models.Model):
     survey_1 = models.IntegerField(max_length=2000, blank=True, help_text='This describes the field', null=True, verbose_name='Test', choices=[(1, 'choice 1'), (2, 'choice 2')])
 
     class Meta:
-        db_table = 'baseline_data'
+        db_table = 'demographics'
 
 
 class BaselineData(models.Model):
@@ -68,7 +68,7 @@ class BaselineData(models.Model):
     date_supplement_dispensed = models.DateField(null=True, verbose_name='Date patient begins supplement', blank=True)
 
     class Meta:
-        db_table = 'month_1_data'
+        db_table = 'baseline_data'
 
 
 class Month1Data(models.Model):
@@ -93,7 +93,7 @@ class Month1Data(models.Model):
     cause_death_1 = models.IntegerField(blank=True, null=True, verbose_name='What was the cause of death?', choices=[(1, 'All-cause'), (2, 'Cardiovascular')]) # This field type is a guess.
 
     class Meta:
-        db_table = 'month_2_data'
+        db_table = 'month_1_data'
 
 
 class Month2Data(models.Model):
@@ -118,7 +118,7 @@ class Month2Data(models.Model):
     cause_death_2 = models.IntegerField(blank=True, null=True, verbose_name='What was the cause of death?', choices=[(1, 'All-cause'), (2, 'Cardiovascular')]) # This field type is a guess.
 
     class Meta:
-        db_table = 'month_3_data'
+        db_table = 'month_2_data'
 
 
 class Month3Data(models.Model):
@@ -151,7 +151,7 @@ class Month3Data(models.Model):
     cause_death_3 = models.IntegerField(blank=True, null=True, verbose_name='What was the cause of death?', choices=[(1, 'All-cause'), (2, 'Cardiovascular')]) # This field type is a guess.
 
     class Meta:
-        db_table = 'month_4_data'
+        db_table = 'month_3_data'
 
 
 class Month4Data(models.Model):
@@ -176,7 +176,7 @@ class Month4Data(models.Model):
     cause_death_4 = models.IntegerField(blank=True, null=True, verbose_name='What was the cause of death?', choices=[(1, 'All-cause'), (2, 'Cardiovascular')]) # This field type is a guess.
 
     class Meta:
-        db_table = 'month_5_data'
+        db_table = 'month_4_data'
 
 
 class Month5Data(models.Model):
@@ -201,7 +201,7 @@ class Month5Data(models.Model):
     cause_death_5 = models.IntegerField(blank=True, null=True, verbose_name='What was the cause of death?', choices=[(1, 'All-cause'), (2, 'Cardiovascular')]) # This field type is a guess.
 
     class Meta:
-        db_table = 'month_6_data'
+        db_table = 'month_5_data'
 
 
 class Month6Data(models.Model):
@@ -234,7 +234,7 @@ class Month6Data(models.Model):
     cause_death_6 = models.IntegerField(blank=True, null=True, verbose_name='What was the cause of death?', choices=[(1, 'All-cause'), (2, 'Cardiovascular')]) # This field type is a guess.
 
     class Meta:
-        db_table = 'completion_data'
+        db_table = 'month_6_data'
 
 
 class CompletionData(models.Model):
@@ -245,7 +245,7 @@ class CompletionData(models.Model):
     study_comments = models.TextField(null=True, verbose_name='Comments', blank=True) # This field type is a guess.
 
     class Meta:
-        db_table = 'brfss_2009_section_21_emotional_support_and_life_satisfaction'
+        db_table = 'completion_data'
 
 
 class Brfss2009Section21EmotionalSupportAndLifeSatisfaction(models.Model):
@@ -253,7 +253,7 @@ class Brfss2009Section21EmotionalSupportAndLifeSatisfaction(models.Model):
     brfss_2009_s21_2_02a4d6 = models.IntegerField(blank=True, null=True, max_length=2000, verbose_name='21.2 In general, how satisfied are you with your life?<br><br>INTERVIEWER NOTE: If asked, say "please include support from any source.""<br><br><br><br><div>INTERVIEWER NOTE - Please read:</div><div style=\'margin-left:40px;\'> Very satisfied<br>Satisfied<br>Dissatisfied<br>Very dissatisfied</div><br><br><div><span style=\'color:red;\'>Do not read:<div style=\'margin-left:40px;\'> Don\'t know/ Not sure<br>Refused</div>"', choices=[(1, 'Very satisfied'), (2, 'Satisfied'), (3, 'Dissatisfied'), (4, 'Very dissatisfied'), (7, "Don't know / Not sure"), (9, 'Refused')])
 
     class Meta:
-        db_table = 'brfss_2009_module_1_prediabetes'
+        db_table = 'brfss_2009_section_21_emotional_support_and_life_satisfaction'
 
 
 class Brfss2009Module1Prediabetes(models.Model):

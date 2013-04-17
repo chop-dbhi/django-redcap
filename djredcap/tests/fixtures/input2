@@ -1,4 +1,5 @@
-tudy_id,demographics,,text,Study ID,,,,,,,,,,
+Variable / Field Name,Form Name,Section Header,Field Type,Field Label,"Choices, Calculations, OR Slider Labels",Field Note,Text Validation Type OR Show Slider Number,Text Validation Min,Text Validation Max,,Branching Logic (Show field only if...),Required Field?,Custom Alignment,Question Number (surveys only)
+study_id,demographics,,text,Study ID,,,,,,,,,,
 gender,demographics,Demographics Information,dropdown,Gender,"0, Female | 1, Male | 2, Other",,,,,,,,,
 other_gender,demographics,,dropdown_other,Other gender | Please specify $placeholder gender,"1, Not tested | 2, XX genotype/Female | 3, XY genotype/Male | 4, XXY Klinefelter's Syndrome | 5, XO Turner's Syndrome | 6, XXXY syndrome | 7, XXYY syndrome | 8, Mosaic including XXXXY | 9, Penta X syndrome | 10, XYY | 11, Unknown | 12, Other",Newborn Screening LTFU,,,,,[gender] = '2',,,
 year_of_birth,demographics,,text,Year of birth (XXXX),,,,,,,,,,

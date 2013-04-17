@@ -45,7 +45,7 @@ class Command(BaseCommand):
 	db_module = 'django.db'
 	args = 'filename';
 
-	def readFile(self, fileName=None):
+	def handle(self, fileName=None):
 		if not fileName:
 			fileName = raw_input('Enter a valid filename: ');
 	
@@ -410,8 +410,3 @@ class Command(BaseCommand):
 			'	 db_table = %r\n' % table_name,
 			'\n',
 			'\n'];
-
-if len(sys.argv) > 1:
-	readFile(sys.argv[1]);
-else:
-	readFile();

@@ -47,9 +47,9 @@ class Command(BaseCommand):
 	db_module = 'django.db'
 	args = 'filename';
 
-	def handle(self, fileName=None):
+	def handle(self, fileName=None, *args, **options):
 		if not fileName:
-			fileName = raw_input('Enter a valid filename: ');
+			raise CommandError('Enter a filename');
 	
 		fin = open(fileName);
 		dialect = csv.Sniffer().sniff(fin.read(1024));
@@ -58,8 +58,8 @@ class Command(BaseCommand):
 	
 		reader.next();
 		if fileName.find('.json') == -1:
-			fileName = csv2json(reader, fileName);
-		json2dj(fileName);
+			fileName = self.csv2json(reader, fileName);
+		self.json2dj(fileName);
 
 	def csv2json(self, reader, fileName):
 		"""
@@ -80,7 +80,7 @@ class Command(BaseCommand):
 				form_list[0] = row['form_name'];
 				if row['form_name'] != last_form_name:
 					if last_form_name:
-						print_list(all_repeats,fout);
+						self.print_list(all_repeats,fout);
 						all_repeats = [];
 					last_form_name = row['form_name'];
 			"""
@@ -102,41 +102,41 @@ class Command(BaseCommand):
 				row['field_name'] = repeat_info[0];
 				form_list.append(''.join(repeat_info[3:]));
 			
-				repeat_rows_list = last_inner_append(repeat_rows_list, [row],0,cur_depth);
+				repeat_rows_list = self.last_inner_append(repeat_rows_list, [row],0,cur_depth);
 				cur_depth = cur_depth + 1;
 			elif row['field_name'].find('endrepeat') != -1:
 				row['field_name'] = row['field_name'].strip().split()[0];
 				
-				repeat_rows_list = last_inner_append(repeat_rows_list, row,0,cur_depth);
+				repeat_rows_list = self.last_inner_append(repeat_rows_list, row,0,cur_depth);
 				cur_depth = cur_depth - 1;
-				repeat_rows_list = last_inner_append(repeat_rows_list,'',0,cur_depth);
+				repeat_rows_list = self.last_inner_append(repeat_rows_list,'',0,cur_depth);
 			elif row['field_name'].find(' repeat ') != -1:
 				repeat_info = row['field_name'].strip().split();
 				row['field_name'] = repeat_info[0];
 				form_list.append(''.join(repeat_info[3:]));
 
-				repeat_rows_list = last_inner_append(repeat_rows_list, [row],0,cur_depth);
+				repeat_rows_list = self.last_inner_append(repeat_rows_list, [row],0,cur_depth);
 				cur_depth = cur_depth - 1;
-				repeat_rows_list = last_inner_append(repeat_rows_list,'',0,cur_depth);
+				repeat_rows_list = self.last_inner_append(repeat_rows_list,'',0,cur_depth);
 			elif len(repeat_rows_list) > 0:
-				repeat_rows_list = last_inner_append(repeat_rows_list, row,0,cur_depth);
+				repeat_rows_list = self.last_inner_append(repeat_rows_list, row,0,cur_depth);
 			
 			if cur_depth <= 0 and len(repeat_rows_list) > 0:
 				"""
 				Run if there are values in the repeat_rows_list but the current depth
 				is 0, meaning all startrepeats have been closed with endrepeats
 				"""
-				repeat_rows_list = clean_list_space(repeat_rows_list);
-				repeat_rows_list = clean_list_endrepeat(repeat_rows_list);
-				create_form_relations(repeat_rows_list,form_list,0,0);
-				repeat_rows_list = order_list(repeat_rows_list);
+				repeat_rows_list = self.clean_list_space(repeat_rows_list);
+				repeat_rows_list = self.clean_list_endrepeat(repeat_rows_list);
+				self.create_form_relations(repeat_rows_list,form_list,0,0);
+				repeat_rows_list = self.order_list(repeat_rows_list);
 				all_repeats.append(repeat_rows_list);
 				repeat_rows_list = [];	
 				form_list = [''];
 				cur_depth = 0;
 			elif cur_depth <= 0 and len(repeat_rows_list) == 0:
 				#Print a row normally
-				fout.write(generateJson(row));
+				fout.write(self.generateJson(row));
 				fout.write('\n');
 				cur_depth = 0;
 				form_list = [''];
@@ -144,7 +144,7 @@ class Command(BaseCommand):
 		#print last repeats list, if any
 		if row['form_name'] != last_form_name:
 			if last_form_name:
-				print_list(all_repeats, fout);
+				self.print_list(all_repeats, fout);
 				all_repeats = [];
 		return fout.name;
 
@@ -156,7 +156,7 @@ class Command(BaseCommand):
 		"""
 		for j,item in enumerate(repeats_list):
 			if isinstance(item,list):
-				item = clean_list_space(item);
+				item = self.clean_list_space(item);
 			elif item == '':
 				repeats_list.pop(j);
 		return repeats_list;
@@ -169,7 +169,7 @@ class Command(BaseCommand):
 		"""
 		for j, item in enumerate(repeats_list):
 			if isinstance(item,list):
-				item = clean_list_endrepeat(item);
+				item = self.clean_list_endrepeat(item);
 			elif item['field_name'] == 'endrepeat':
 				repeats_list.pop(j);
 		return repeats_list;
@@ -184,7 +184,7 @@ class Command(BaseCommand):
 		for j, item in enumerate(repeats_list):
 			if isinstance(item,list):
 				num_lists = num_lists + 1;
-				item = create_form_relations(item, form_list, form_index+num_lists, form_index);
+				item = self.create_form_relations(item, form_list, form_index+num_lists, form_index);
 			else:
 				item['form_name'] = form_list[form_index] + '~' + form_list[prev_form_index];
 
@@ -197,7 +197,7 @@ class Command(BaseCommand):
 		orderList = [[]];
 		for j,item in enumerate(repeats_list):
 			if isinstance(item,list):
-				orderList.append(order_list(item));
+				orderList.append(self.order_list(item));
 			else:
 				orderList[0].append(item);
 		return orderList;		
@@ -208,9 +208,9 @@ class Command(BaseCommand):
 		"""
 		for item in someList:
 			if isinstance(item,list):
-				print_list(item,fout);
+				self.print_list(item,fout);
 			else:	
-				fout.write(generateJson(item));
+				fout.write(self.generateJson(item));
 				fout.write('\n');
 
 	def last_inner_append(self,x,y,curDepth,depth):
@@ -221,7 +221,7 @@ class Command(BaseCommand):
 		try:
 			if(curDepth != depth):
 				if isinstance(x[-1],list):
-					last_inner_append(x[-1],y,curDepth+1,depth);
+					self.last_inner_append(x[-1],y,curDepth+1,depth);
 					return x;
 		except IndexError:
 			pass;
@@ -260,79 +260,79 @@ class Command(BaseCommand):
 		fout = open(fileName + '.py', 'w+');
 
 		prev_form_name = None;
-	prev_fk_name = None;
-	for line in open(fileName,'r'):
-		form_name = get_field_value(line, 'form name');
-		fk_name = None;
+		prev_fk_name = None;
+		for line in open(fileName,'r'):
+			form_name = self.get_field_value(line, 'form name');
+			fk_name = None;
 		
-		#print form_name;
-		if form_name.find('~') != -1:
-			form_name, fk_name = form_name.split('~');
-			fk_name = form2model(fk_name);
-			form_name = form2model(form_name);
-			#print 'fk_name ' + str(fk_name) + '	' + 'prev_fk ' + str(prev_fk_name);
-			if form_name != prev_form_name:
-				if prev_fk_name:
-					fout.write(get_FK(prev_fk_name));
-				if prev_form_name:
-					for meta_line in get_meta(prev_form_name):
-						fout.write(meta_line);
-				prev_form_name = form_name;
-				prev_fk_name = fk_name;
-				fout.write('class %s(models.Model):' % form_name);
-				fout.write('\n');
+			#print form_name;
+			if form_name.find('~') != -1:
+				form_name, fk_name = form_name.split('~');
+				fk_name = form2model(fk_name);
+				form_name = form2model(form_name);
+				#print 'fk_name ' + str(fk_name) + '	' + 'prev_fk ' + str(prev_fk_name);
+				if form_name != prev_form_name:
+					if prev_fk_name:
+						fout.write(self.get_FK(prev_fk_name));
+					if prev_form_name:
+						for meta_line in self.get_meta(prev_form_name):
+							fout.write(meta_line);
+					prev_form_name = form_name;
+					prev_fk_name = fk_name;
+					fout.write('class %s(models.Model):' % form_name);
+					fout.write('\n');
 				
-			column_name = get_field_value(line, 'field name');
-			att_name = column_name.lower();
-			comment_notes = [];
-			extra_params = {};
+				column_name = self.get_field_value(line, 'field name');
+				att_name = column_name.lower();
+				comment_notes = [];
+				extra_params = {};
 	
-			extra_params['verbose_name'] = get_field_value(line, 'field label');
+				extra_params['verbose_name'] = self.get_field_value(line, 'field label');
 			
-			extra_params['help_text'] = get_field_value(line, 'field note');
+				extra_params['help_text'] = self.get_field_value(line, 'field note');
 			
-			if ' ' in att_name or '-' in att_name or keyword.iskeyword(att_name) or column_name != att_name:
-				extra_params['db_column'] = column_name;
+				if ' ' in att_name or '-' in att_name or keyword.iskeyword(att_name) or column_name != att_name:
+					extra_params['db_column'] = column_name;
 			
-			if ' ' in att_name:
-				att_name = att_name.replace(' ','_');
-				comment_notes.append('Field renamed to remove spaces.');
-			if '-' in att_name:
-				att_name = att_name.replace('-','_');
-				comment_notes.append('Field renamed to remove dashes.');
-			if column_name != att_name:
-				comment_notes.append('Field name made lowercase.');
+				if ' ' in att_name:
+					att_name = att_name.replace(' ','_');
+					comment_notes.append('Field renamed to remove spaces.');
+				if '-' in att_name:
+					att_name = att_name.replace('-','_');
+					comment_notes.append('Field renamed to remove dashes.');
+				if column_name != att_name:
+					comment_notes.append('Field name made lowercase.');
 		
-			field_type, field_params, field_notes = get_field_type(line);
-			extra_params.update(field_params);
-			comment_notes.extend(field_notes);
+				field_type, field_params, field_notes = self.get_field_type(line);
+				extra_params.update(field_params);
+				comment_notes.extend(field_notes);
 		
-			field_type += '('
+				field_type += '('
 
-			if keyword.iskeyword(att_name):
-				att_name += '_field';
-				comment_notes.append('Field renamed because it was a Python reserved word.');
-			if att_name[0].isdigit():
-				att_name = 'number_%s' % att_name;
-				extra_params['db_column'] = unicode(column_name);
-				comment_notes.append("Field renamed because it wasn't a valid python identifier.");
+				if keyword.iskeyword(att_name):
+					att_name += '_field';
+					comment_notes.append('Field renamed because it was a Python reserved word.');
+				if att_name[0].isdigit():
+					att_name = 'number_%s' % att_name;
+					extra_params['db_column'] = unicode(column_name);
+					comment_notes.append("Field renamed because it wasn't a valid python identifier.");
 		
-			if att_name == 'id' and field_type == 'AutoField(' and extra_params == {'primary_key': True}:
-				pass
-			field_desc = '%s = models.%s' % (att_name, field_type);
-			if extra_params:
-				if not field_desc.endswith('('):
-					field_desc += ', ';
-				field_desc += ', '.join(['%s=%r' % (k, v) for k, v in extra_params.items()])
-			field_desc += ')';
-			if comment_notes:
-				field_desc += ' # ' + ' '.join(comment_notes);
+				if att_name == 'id' and field_type == 'AutoField(' and extra_params == {'primary_key': True}:
+					pass
+				field_desc = '%s = models.%s' % (att_name, field_type);
+				if extra_params:
+					if not field_desc.endswith('('):
+						field_desc += ', ';
+					field_desc += ', '.join(['%s=%r' % (k, v) for k, v in extra_params.items()])
+				field_desc += ')';
+				if comment_notes:
+					field_desc += ' # ' + ' '.join(comment_notes);
 		
-			fout.write('    %s\n' % field_desc);
+				fout.write('    %s\n' % field_desc);
 		#final meta class
 		if fk_name:
-			fout.write(get_FK(fk_name));
-		for meta_line in get_meta(form_name):
+			fout.write(self.get_FK(fk_name));
+		for meta_line in self.get_meta(form_name):
 			fout.write(meta_line);
 
 	def get_field_type(self, line):
@@ -344,9 +344,9 @@ class Command(BaseCommand):
 		field_params = {};
 		field_notes = [];
 	
-		required = get_field_value(line,'required?');
-		validation_type = get_field_value(line,'validation type');
-		field_type = get_field_value(line,'field type');
+		required = self.get_field_value(line,'required?');
+		validation_type = self.get_field_value(line,'validation type');
+		field_type = self.get_field_value(line,'field type');
 
 		try:
 			field_type = field_types.get(validation_type, field_types[field_type]);
@@ -363,10 +363,10 @@ class Command(BaseCommand):
 			field_params['max_length'] = 2000;
 
 		choices = None;
-		if get_field_value(line,'choices'):
+		if self.get_field_value(line,'choices'):
 			try:
 				choices = [(int(v.strip()), k.strip()) for v, k in [choice.split(',') \
-					for choice in get_field_value(line,'choices').split('|')]]
+					for choice in self.get_field_value(line,'choices').split('|')]]
 				field_type = 'IntegerField'
 			except (ValueError, TypeError):
 				pass

@@ -72,10 +72,10 @@ version = __import__(BASE_PACKAGE).get_version()
 
 setup(
     version = version,
-    name = 'django-redcap',
+    name = 'django-redcapJSON',
     author = 'Daniel Megahan',
     author_email = 'megahand@email.chop.edu',
-    description = 'Utilities for porting REDCap projects a JSON schema and a JSON schema to Django',
+    description = 'Utilities for porting REDCap data dictionaries to a JSON schema and a JSON schema to Django',
     license = 'BSD',
     keywords = 'redcap JSON django utils',
     url = 'https://github.com/dmegahan/django-redcap/',

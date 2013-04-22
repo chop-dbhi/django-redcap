@@ -20,7 +20,7 @@ class RedcapTestCase(TestCase):
     def test_csv(self):
         buff = StringIO()
         sys.stdout = buff
-        call_command('redcap', 'inspect', get_filename('redcap_inspect.csv'))
+        call_command('redcap', 'inspect', get_filename('input2'))
         buff.seek(0)
         cmp_file = open(get_filename('redcap_inspect.py'))
         self.assertEqual(buff.read(), cmp_file.read())

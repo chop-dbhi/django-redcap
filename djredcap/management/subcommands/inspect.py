@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import csv
 import json
 import keyword
@@ -316,7 +318,7 @@ class Command(BaseCommand):
 				comment_notes.append("Field renamed because it wasn't a valid python identifier.");
 		
 			if att_name == 'id' and field_type == 'AutoField(' and extra_params == {'primary_key': True}:
-			continue
+				pass
 			field_desc = '%s = models.%s' % (att_name, field_type);
 			if extra_params:
 				if not field_desc.endswith('('):

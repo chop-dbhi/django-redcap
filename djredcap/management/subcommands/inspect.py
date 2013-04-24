@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import os
 import csv
 import json
 import keyword
@@ -65,8 +66,8 @@ class Command(BaseCommand):
 		"""
 		Function that converts csv file to valid json. 
 		"""
-		fout = open(fileName + '.json', "w+");
-		
+		newFileName = self.remove_file_extension(os.path.basename(fileName));
+		fout = open(os.path.join(os.path.dirname(fileName),newFileName + '.json'), "w+");
 		repeat_rows_list = [];
 		all_repeats = [];
 		form_list = [''];
@@ -256,8 +257,9 @@ class Command(BaseCommand):
 	
 	def json2dj(self, fileName):
 		form2model = lambda form_name: form_name.title().replace('_','').replace(' ','').replace('-','');
-	
-		fout = open(fileName + '.py', 'w+');
+		
+		newFileName = self.remove_file_extension(os.path.basename(fileName));
+		fout = open(os.path.join(os.path.dirname(fileName),newFileName + '.py'), 'w+');
 
 		prev_form_name = None;
 		prev_fk_name = None;
@@ -269,66 +271,66 @@ class Command(BaseCommand):
 			if form_name.find('~') != -1:
 				form_name, fk_name = form_name.split('~');
 				fk_name = form2model(fk_name);
-				form_name = form2model(form_name);
-				#print 'fk_name ' + str(fk_name) + '	' + 'prev_fk ' + str(prev_fk_name);
-				if form_name != prev_form_name:
-					if prev_fk_name:
-						fout.write(self.get_FK(prev_fk_name));
-					if prev_form_name:
-						for meta_line in self.get_meta(prev_form_name):
-							fout.write(meta_line);
-					prev_form_name = form_name;
-					prev_fk_name = fk_name;
-					fout.write('class %s(models.Model):' % form_name);
-					fout.write('\n');
+			form_name = form2model(form_name);
+			#print 'fk_name ' + str(fk_name) + '	' + 'prev_fk ' + str(prev_fk_name);
+			if form_name != prev_form_name:
+				if prev_fk_name:
+					fout.write(self.get_FK(prev_fk_name));
+				if prev_form_name:
+					for meta_line in self.get_meta(prev_form_name):
+						fout.write(meta_line);
+				prev_form_name = form_name;
+				prev_fk_name = fk_name;
+				fout.write('class %s(models.Model):' % form_name);
+				fout.write('\n');
 				
-				column_name = self.get_field_value(line, 'field name');
-				att_name = column_name.lower();
-				comment_notes = [];
-				extra_params = {};
+			column_name = self.get_field_value(line, 'field name');
+			att_name = column_name.lower();
+			comment_notes = [];
+			extra_params = {};
 	
-				extra_params['verbose_name'] = self.get_field_value(line, 'field label');
+			extra_params['verbose_name'] = self.get_field_value(line, 'field label');
 			
-				extra_params['help_text'] = self.get_field_value(line, 'field note');
+			extra_params['help_text'] = self.get_field_value(line, 'field note');
 			
-				if ' ' in att_name or '-' in att_name or keyword.iskeyword(att_name) or column_name != att_name:
-					extra_params['db_column'] = column_name;
+			if ' ' in att_name or '-' in att_name or keyword.iskeyword(att_name) or column_name != att_name:
+				extra_params['db_column'] = column_name;
 			
-				if ' ' in att_name:
-					att_name = att_name.replace(' ','_');
-					comment_notes.append('Field renamed to remove spaces.');
-				if '-' in att_name:
-					att_name = att_name.replace('-','_');
-					comment_notes.append('Field renamed to remove dashes.');
-				if column_name != att_name:
-					comment_notes.append('Field name made lowercase.');
+			if ' ' in att_name:
+				att_name = att_name.replace(' ','_');
+				comment_notes.append('Field renamed to remove spaces.');
+			if '-' in att_name:
+				att_name = att_name.replace('-','_');
+				comment_notes.append('Field renamed to remove dashes.');
+			if column_name != att_name:
+				comment_notes.append('Field name made lowercase.');
 		
-				field_type, field_params, field_notes = self.get_field_type(line);
-				extra_params.update(field_params);
-				comment_notes.extend(field_notes);
+			field_type, field_params, field_notes = self.get_field_type(line);
+			extra_params.update(field_params);
+			comment_notes.extend(field_notes);
 		
-				field_type += '('
+			field_type += '('
 
-				if keyword.iskeyword(att_name):
-					att_name += '_field';
-					comment_notes.append('Field renamed because it was a Python reserved word.');
-				if att_name[0].isdigit():
-					att_name = 'number_%s' % att_name;
-					extra_params['db_column'] = unicode(column_name);
-					comment_notes.append("Field renamed because it wasn't a valid python identifier.");
+			if keyword.iskeyword(att_name):
+				att_name += '_field';
+				comment_notes.append('Field renamed because it was a Python reserved word.');
+			if att_name[0].isdigit():
+				att_name = 'number_%s' % att_name;
+				extra_params['db_column'] = unicode(column_name);
+				comment_notes.append("Field renamed because it wasn't a valid python identifier.");
 		
-				if att_name == 'id' and field_type == 'AutoField(' and extra_params == {'primary_key': True}:
-					pass
-				field_desc = '%s = models.%s' % (att_name, field_type);
-				if extra_params:
-					if not field_desc.endswith('('):
-						field_desc += ', ';
-					field_desc += ', '.join(['%s=%r' % (k, v) for k, v in extra_params.items()])
-				field_desc += ')';
-				if comment_notes:
-					field_desc += ' # ' + ' '.join(comment_notes);
+			if att_name == 'id' and field_type == 'AutoField(' and extra_params == {'primary_key': True}:
+				pass
+			field_desc = '%s = models.%s' % (att_name, field_type);
+			if extra_params:
+				if not field_desc.endswith('('):
+					field_desc += ', ';
+				field_desc += ', '.join(['%s=%r' % (k, v) for k, v in extra_params.items()])
+			field_desc += ')';
+			if comment_notes:
+				field_desc += ' # ' + ' '.join(comment_notes);
 		
-				fout.write('    %s\n' % field_desc);
+			fout.write('    %s\n' % field_desc);
 		#final meta class
 		if fk_name:
 			fout.write(self.get_FK(fk_name));
@@ -412,3 +414,8 @@ class Command(BaseCommand):
 			'	 db_table = %r\n' % table_name,
 			'\n',
 			'\n'];
+	def remove_file_extension(self,fileName):
+		index = fileName.find('.');
+		fileName = fileName[:index];
+		return fileName;
+

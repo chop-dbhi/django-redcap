@@ -74,6 +74,9 @@ class Command(BaseCommand):
 		last_form_name = None;
 		cur_depth = 0;
 		for row in reader:
+			if row['field_name'].find('$') != -1:
+				index = row['field_name'].find('$');
+				row['field_name'] = row['field_name'][:index] + row['field_name'][index+4:];
 			"""
 			Printing the list of repeating rows built below.
 			"""
@@ -142,7 +145,7 @@ class Command(BaseCommand):
 				cur_depth = 0;
 				form_list = [''];
 				repeat_rows_list = [];
-		#print last repeats list, if any
+
 		if row['form_name'] != last_form_name:
 			if last_form_name:
 				self.print_list(all_repeats, fout);
@@ -256,13 +259,18 @@ class Command(BaseCommand):
        		                                 },},},indent=0, separators=(',',':')));	
 	
 	def json2dj(self, fileName):
-		form2model = lambda form_name: form_name.title().replace('_','').replace(' ','').replace('-','');
+		form2model = lambda form_name: form_name.title().replace('_','').replace(' ','').replace('-','').replace('/','').replace('(','').replace(')','');
 		
 		newFileName = self.remove_file_extension(os.path.basename(fileName));
 		fout = open(os.path.join(os.path.dirname(fileName),newFileName + '.py'), 'w+');
 
 		prev_form_name = None;
 		prev_fk_name = None;
+		
+		fout.write('from %s import models' % self.db_module);
+		fout.write('\n');
+	
+		fout.write('\n');	
 		for line in open(fileName,'r'):
 			form_name = self.get_field_value(line, 'form name');
 			fk_name = None;
@@ -302,9 +310,12 @@ class Command(BaseCommand):
 			if '-' in att_name:
 				att_name = att_name.replace('-','_');
 				comment_notes.append('Field renamed to remove dashes.');
+			if att_name.endswith('_'):
+				att_name = att_name[:-1];
+				comment_notes.append('Field renamed to remove ending underscore');
 			if column_name != att_name:
 				comment_notes.append('Field name made lowercase.');
-		
+			
 			field_type, field_params, field_notes = self.get_field_type(line);
 			extra_params.update(field_params);
 			comment_notes.extend(field_notes);

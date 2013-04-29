@@ -68,7 +68,10 @@ class Command(BaseCommand):
 		"""
 		newFileName = self.remove_file_extension(os.path.basename(fileName));
 		fout = open(os.path.join(os.path.dirname(fileName),newFileName + '.json'), "w+");
-		repeat_rows_list = [];
+		
+		#repeating_rows is a group of repeating rows located within a form.
+		#all_repeats is all of the repeating rows for that form.
+		repeating_rows = [];
 		all_repeats = [];
 		form_list = [''];
 		last_form_name = None;
@@ -106,45 +109,45 @@ class Command(BaseCommand):
 				row['field_name'] = repeat_info[0];
 				form_list.append(''.join(repeat_info[3:]));
 			
-				repeat_rows_list = self.last_inner_append(repeat_rows_list, [row],0,cur_depth);
+				repeating_rows = self.last_inner_append(repeating_rows, [row],0,cur_depth);
 				cur_depth = cur_depth + 1;
 			elif row['field_name'].find('endrepeat') != -1:
 				row['field_name'] = row['field_name'].strip().split()[0];
 				
-				repeat_rows_list = self.last_inner_append(repeat_rows_list, row,0,cur_depth);
+				repeating_rows = self.last_inner_append(repeating_rows, row,0,cur_depth);
 				cur_depth = cur_depth - 1;
-				repeat_rows_list = self.last_inner_append(repeat_rows_list,'',0,cur_depth);
+				repeating_rows = self.last_inner_append(repeating_rows,'',0,cur_depth);
 			elif row['field_name'].find(' repeat ') != -1:
 				repeat_info = row['field_name'].strip().split();
 				row['field_name'] = repeat_info[0];
 				form_list.append(''.join(repeat_info[3:]));
 
-				repeat_rows_list = self.last_inner_append(repeat_rows_list, [row],0,cur_depth);
+				repeating_rows = self.last_inner_append(repeating_rows, [row],0,cur_depth);
 				cur_depth = cur_depth - 1;
-				repeat_rows_list = self.last_inner_append(repeat_rows_list,'',0,cur_depth);
-			elif len(repeat_rows_list) > 0:
-				repeat_rows_list = self.last_inner_append(repeat_rows_list, row,0,cur_depth);
+				repeating_rows = self.last_inner_append(repeating_rows,'',0,cur_depth);
+			elif len(repeating_rows) > 0:
+				repeating_rows = self.last_inner_append(repeating_rows, row,0,cur_depth);
 			
-			if cur_depth <= 0 and len(repeat_rows_list) > 0:
+			if cur_depth <= 0 and len(repeating_rows) > 0:
 				"""
-				Run if there are values in the repeat_rows_list but the current depth
+				Run if there are values in the repeating_rows but the current depth
 				is 0, meaning all startrepeats have been closed with endrepeats
 				"""
-				repeat_rows_list = self.clean_list_space(repeat_rows_list);
-				repeat_rows_list = self.clean_list_endrepeat(repeat_rows_list);
-				self.create_form_relations(repeat_rows_list,form_list,0,0);
-				repeat_rows_list = self.order_list(repeat_rows_list);
-				all_repeats.append(repeat_rows_list);
-				repeat_rows_list = [];	
+				repeating_rows = self.clean_list_space(repeating_rows);
+				repeating_rows = self.clean_list_endrepeat(repeating_rows);
+				self.create_form_relations(repeating_rows,form_list,0,0);
+				repeating_rows = self.order_list(repeating_rows);
+				all_repeats.append(repeating_rows);
+				repeating_rows = [];	
 				form_list = [''];
 				cur_depth = 0;
-			elif cur_depth <= 0 and len(repeat_rows_list) == 0:
+			elif cur_depth <= 0 and len(repeating_rows) == 0:
 				#Print a row normally
 				fout.write(self.generateJson(row));
 				fout.write('\n');
 				cur_depth = 0;
 				form_list = [''];
-				repeat_rows_list = [];
+				repeating_rows = [];
 
 		if row['form_name'] != last_form_name:
 			if last_form_name:
@@ -194,7 +197,7 @@ class Command(BaseCommand):
 
 	def order_list(self, repeats_list):
 		"""
-		Given a repeats list created in the csv2json function, this list will pull out all
+		Given a list of repeating rows created in the csv2json function, this list will pull out all
 		the embedded lists and order them in order of appearence, while keeping values in their
 		correct list, even if they were seperated by another list.
 		"""
@@ -217,15 +220,14 @@ class Command(BaseCommand):
 				fout.write(self.generateJson(item));
 				fout.write('\n');
 
-	def last_inner_append(self,x,y,curDepth,depth):
+	def last_inner_append(self,x,y,curDepth,targetDepth):
 		"""
-		Finds the deepest index in a list, that is not a list itself. If a list is 
-		found, the function is called recursively on that list.
+		Finds the deepest index in a list of lists at a targetDepth.
 		"""
 		try:
-			if(curDepth != depth):
+			if(curDepth != targetDepth):
 				if isinstance(x[-1],list):
-					self.last_inner_append(x[-1],y,curDepth+1,depth);
+					self.last_inner_append(x[-1],y,curDepth+1,targetDepth);
 					return x;
 		except IndexError:
 			pass;

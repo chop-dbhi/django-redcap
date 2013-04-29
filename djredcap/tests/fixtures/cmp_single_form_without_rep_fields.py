@@ -1,3 +1,5 @@
+from django.db import models
+
 class Demographics(models.Model):
     study_id = models.CharField(help_text='', null=True, max_length=2000, verbose_name='Study ID', blank=True)
     checkbox_test = models.IntegerField(max_length=2000, blank=True, help_text='Helps the data entry person', null=True, verbose_name='Checkbox', choices=[(0, 'option 1'), (1, 'option 2'), (2, 'option 3'), (3, 'option 4')])

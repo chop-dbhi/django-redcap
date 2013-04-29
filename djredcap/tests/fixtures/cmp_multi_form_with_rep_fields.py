@@ -40,8 +40,8 @@ class BirthHistory(models.Model):
     gestational_age_wks = models.IntegerField(help_text='Specify partial week in days below. If full term but exact month and days are unknown, specify 40 weeks and 0 days.', null=True, verbose_name='Gestational age full weeks', blank=True)
     gestational_age_days = models.IntegerField(help_text='', null=True, verbose_name='Gestation age days', blank=True)
     mother_birth_age = models.CharField(help_text='Please round up if the age is 6 months or more into the current year.', null=True, max_length=2000, verbose_name="Mother's age when child was born (years)", blank=True)
-    gravida = models.IntegerField(help_text='', null=True, verbose_name='Gravida\\n(Number of prior gestations including proband)', blank=True)
-    para = models.IntegerField(help_text='', null=True, verbose_name='Para\\n(Number of live births including the proband)', blank=True)
+    gravida = models.IntegerField(help_text='', null=True, verbose_name='Gravida\n(Number of prior gestations including proband)', blank=True)
+    para = models.IntegerField(help_text='', null=True, verbose_name='Para\n(Number of live births including the proband)', blank=True)
     assisted_reproduction_bool = models.IntegerField(max_length=2000, blank=True, help_text='', null=True, verbose_name='Was any type of assisted reproduction (for example sperm donation, in vitro fertilization) used in the pregnancy for this child?', choices=[(1, 'Yes'), (2, 'No'), (3, 'Unknown/Not documented')])
     assisted_reproduction_spec = models.CharField(help_text='', null=True, max_length=2000, verbose_name='Please specify type of assisted reproduction', blank=True)
     prior_pregnancy_history = models.CharField(help_text='', null=True, max_length=2000, verbose_name='Did the mother have any of the following', blank=True)
@@ -54,9 +54,9 @@ class BirthHistory(models.Model):
     ultrasound_no = models.IntegerField(help_text='', null=True, verbose_name='How many ultrasound tests do you want to enter?', blank=True)
     ultrasound_increased_reason = models.CharField(help_text='', null=True, max_length=2000, verbose_name='Reason for increased number of ultrasounds?', blank=True)
     pn_exposure = models.IntegerField(max_length=2000, blank=True, help_text='', null=True, verbose_name='Prenatal exposures', choices=[(6, 'None'), (1, 'Recreational drugs'), (2, 'Alcohol'), (3, 'Tobacco'), (4, 'Infection'), (5, 'Unknown/Not documented'), (7, 'Other unknown exposures'), (8, 'Other known exposures (specify below)')])
-    pn_exposure_alc_spec = models.TextField(help_text='', null=True, verbose_name='Specify prenatal alcohol exposure\\n(Alcohol amount, time of exposure, duration of exposure)', blank=True) # This field type is a guess
-    pn_exposure_tob_spec = models.TextField(help_text='', null=True, verbose_name='Specify prenatal tobacco exposures\\n(Tobacco amount, time of exposure, duration of exposure)', blank=True) # This field type is a guess
-    pn_exposure_inf_spec = models.TextField(help_text='', null=True, verbose_name='Specify prenatal infection exposures\\n(Infection, time of exposure, duration of exposure, treatment)', blank=True) # This field type is a guess
+    pn_exposure_alc_spec = models.TextField(help_text='', null=True, verbose_name='Specify prenatal alcohol exposure\n(Alcohol amount, time of exposure, duration of exposure)', blank=True) # This field type is a guess
+    pn_exposure_tob_spec = models.TextField(help_text='', null=True, verbose_name='Specify prenatal tobacco exposures\n(Tobacco amount, time of exposure, duration of exposure)', blank=True) # This field type is a guess
+    pn_exposure_inf_spec = models.TextField(help_text='', null=True, verbose_name='Specify prenatal infection exposures\n(Infection, time of exposure, duration of exposure, treatment)', blank=True) # This field type is a guess
     maternal_screening = models.IntegerField(max_length=2000, blank=True, help_text='', null=True, verbose_name='Maternal serum screening', choices=[(1, 'Normal'), (2, 'Abnormal'), (3, 'Not performed'), (5, 'Not determined'), (4, 'Unknown/Not documented')])
     maternal_serum_type = models.TextField(help_text='', null=True, verbose_name='Type of maternal serum screening', blank=True) # This field type is a guess
     maternal_serum_spec = models.TextField(help_text='', null=True, verbose_name='Maternal serum screening revealed', blank=True) # This field type is a guess
@@ -708,21 +708,21 @@ class Urinalysis(models.Model):
 
 
 class Chemistrypanel(models.Model):
-    cmp_misc = models.IntegerField(max_length=2000, blank=True, help_text='', null=True, verbose_name='Chemistry Panel Results (Part 1)\\n\\nAbnormal values', choices=[(1, 'Glucose'), (2, 'Calcium'), (3, 'All of the above within normal range')])
+    cmp_misc = models.IntegerField(max_length=2000, blank=True, help_text='', null=True, verbose_name='Chemistry Panel Results (Part 1)\n\nAbnormal values', choices=[(1, 'Glucose'), (2, 'Calcium'), (3, 'All of the above within normal range')])
     cmp_glucose_level = models.TextField(help_text='', null=True, verbose_name='Glucose level $placeholder', blank=True) # This field type is a guess
     cmp_calcium_level = models.TextField(help_text='', null=True, verbose_name='Calcium level $placeholder', blank=True) # This field type is a guess
-    cmp_electrolyte = models.IntegerField(max_length=2000, blank=True, help_text='', null=True, verbose_name='Chemistry Panel Results (Part 2)\\n\\nAbnormal electrolytes', choices=[(1, 'Sodium'), (2, 'Potassium'), (3, 'Bicarb'), (4, 'Chloride'), (5, 'All of the above within normal range')])
+    cmp_electrolyte = models.IntegerField(max_length=2000, blank=True, help_text='', null=True, verbose_name='Chemistry Panel Results (Part 2)\n\nAbnormal electrolytes', choices=[(1, 'Sodium'), (2, 'Potassium'), (3, 'Bicarb'), (4, 'Chloride'), (5, 'All of the above within normal range')])
     cmp_electrolyte_sodium_level = models.TextField(help_text='', null=True, verbose_name='Sodium level $placeholder', blank=True) # This field type is a guess
     cmp_electrolyte_potassium_level = models.TextField(help_text='', null=True, verbose_name='Potassium level $placeholder', blank=True) # This field type is a guess
     cmp_electrolyte_bicarb_level = models.TextField(help_text='', null=True, verbose_name='Bicarb level $placeholder', blank=True) # This field type is a guess
     cmp_electrolyte_chloride_level = models.TextField(help_text='', null=True, verbose_name='Chloride level $placeholder', blank=True) # This field type is a guess
-    cmp_kidney = models.IntegerField(max_length=2000, blank=True, help_text='', null=True, verbose_name='Chemistry Panel Results (Part 3)\\n\\nAbnormal Kidney values', choices=[(1, 'Blood Urea Nitrogen (BUN)'), (2, 'Creatinine'), (3, 'All of the above within normal range')])
+    cmp_kidney = models.IntegerField(max_length=2000, blank=True, help_text='', null=True, verbose_name='Chemistry Panel Results (Part 3)\n\nAbnormal Kidney values', choices=[(1, 'Blood Urea Nitrogen (BUN)'), (2, 'Creatinine'), (3, 'All of the above within normal range')])
     cmp_bun_level = models.TextField(help_text='', null=True, verbose_name='BUN level $placeholder', blank=True) # This field type is a guess
     cmp_creatinine_level = models.TextField(help_text='', null=True, verbose_name='Creatinine level $placeholder', blank=True) # This field type is a guess
-    cmp_protein = models.IntegerField(max_length=2000, blank=True, help_text='', null=True, verbose_name='Chemistry Panel Results (Part 4)\\n\\nAbnormal protein values', choices=[(1, 'Albumin'), (2, 'Total protein'), (3, 'All of the above within normal range')])
+    cmp_protein = models.IntegerField(max_length=2000, blank=True, help_text='', null=True, verbose_name='Chemistry Panel Results (Part 4)\n\nAbnormal protein values', choices=[(1, 'Albumin'), (2, 'Total protein'), (3, 'All of the above within normal range')])
     cmp_albumin_level = models.TextField(help_text='', null=True, verbose_name='Albumin level $placeholder', blank=True) # This field type is a guess
     cmp_total_protein_level = models.TextField(help_text='', null=True, verbose_name='Total protein level $placeholder', blank=True) # This field type is a guess
-    cmp_liver = models.IntegerField(max_length=2000, blank=True, help_text='', null=True, verbose_name='Chemistry Panel Results (Part 5)\\n\\nAbnormal liver values', choices=[(1, 'ALP (Alkaline Phosphatase)'), (2, 'ALT (Alanine aminotransferase)'), (3, 'AST (Aspartate aminotransferase)'), (4, 'Bilirubin'), (5, 'All of the above within normal range')])
+    cmp_liver = models.IntegerField(max_length=2000, blank=True, help_text='', null=True, verbose_name='Chemistry Panel Results (Part 5)\n\nAbnormal liver values', choices=[(1, 'ALP (Alkaline Phosphatase)'), (2, 'ALT (Alanine aminotransferase)'), (3, 'AST (Aspartate aminotransferase)'), (4, 'Bilirubin'), (5, 'All of the above within normal range')])
     cmp_alp_level = models.TextField(help_text='', null=True, verbose_name='ALP (Alkaline Phospatase) level $placeholder', blank=True) # This field type is a guess
     cmp_alt_level = models.TextField(help_text='', null=True, verbose_name='ALT (Alanine aminotransferase) level $placeholder', blank=True) # This field type is a guess
     cmp_ast_level = models.TextField(help_text='', null=True, verbose_name='AST(Aspartate aminotransferase) level $placeholder', blank=True) # This field type is a guess
@@ -866,7 +866,7 @@ class Endoscopy(models.Model):
 class Musclebiopsy(models.Model):
     muscle_biopsy_date = models.FloatField(help_text='Please specify four digit year', null=True, verbose_name='Year of $s muscle biopsy', blank=True)
     muscle_biopsy_result = models.IntegerField(max_length=2000, blank=True, help_text='', null=True, verbose_name='General pathological analysis of $s muscle biopsy', choices=[(1, 'Normal'), (2, 'Abnormal'), (3, 'Not determined'), (4, 'Unknown/Not documented')])
-    muscle_biopsy_spec_ = models.TextField(help_text='', null=True, verbose_name='Specify abnormal result for $s muscle biopsy', db_column='muscle_biopsy_spec ', blank=True) # Field renamed to remove spaces. Field name made lowercase. This field type is a guess
+    muscle_biopsy_spec = models.TextField(help_text='', null=True, verbose_name='Specify abnormal result for $s muscle biopsy', db_column='muscle_biopsy_spec ', blank=True) # Field renamed to remove spaces. Field renamed to remove ending underscore Field name made lowercase. This field type is a guess
     muscle_biopsy_mito_test_bool = models.IntegerField(max_length=2000, blank=True, help_text='', null=True, verbose_name='Mitochondrial testing done on $s muscle biopsy', choices=[(1, 'Yes'), (2, 'No'), (3, 'Unknown/Not documented')])
     muscle_biopsy_mito_test_type = models.IntegerField(help_text='', null=True, verbose_name='Type of testing performed on $s muscle biopsy | Results of $placeholder', blank=True, choices=[(1, 'PDH'), (2, 'OXPHOS'), (3, 'ETC Enzymes'), (4, 'Coenzyme Q10'), (5, 'Mitochondrial DNA Content')]) # This field type is a guess
     priortesting = models.ForeignKey(PriorTesting)
@@ -1002,7 +1002,7 @@ class FamilyHistory(models.Model):
 
 class Otherfamilymemberswithsimilarsymptoms(models.Model):
     other_family_side = models.IntegerField(max_length=2000, blank=True, help_text='', null=True, verbose_name='Which side of the family is the $s family member on?', choices=[(1, 'Maternal'), (2, 'Paternal'), (3, 'Unknown/Not documented')])
-    other_family_rel_ = models.CharField(max_length=2000, db_column='other_family_rel ', blank=True, help_text='Ex: First cousin, aunt, etc.', null=True, verbose_name='What is the relationship of the $s family member to the proband?') # Field renamed to remove spaces. Field name made lowercase.
+    other_family_rel = models.CharField(max_length=2000, db_column='other_family_rel ', blank=True, help_text='Ex: First cousin, aunt, etc.', null=True, verbose_name='What is the relationship of the $s family member to the proband?') # Field renamed to remove spaces. Field renamed to remove ending underscore Field name made lowercase.
     other_family_symptoms = models.CharField(help_text='', null=True, max_length=2000, verbose_name='Describe the symptoms of the $s family member.', blank=True)
     familyhistory = models.ForeignKey(FamilyHistory)
 

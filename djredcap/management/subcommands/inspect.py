@@ -237,26 +237,23 @@ class Command(BaseCommand):
 		Generates the json for the given row. The json is formatted to 1 line for easier
 		search when generating the django models.
 		"""
-		return (json.dumps({'form':
-	                                        {'form name': row['form_name'],
-	                                        'section header': row['section_name'],
-	                                        'field':
-       		                                 {'field name': row['field_name'],
-       	        	                          'field label': row['field_label'],
-                	                         'field note': row['field_note'],
-                	                         'type':
-                	                                {'field type': row['field_type'],
-                        	                         'choices': row['choices']},
-                        	                 'text validation':
-                        	                        {'validation type': row['validation_type'],
-	                                                 'min value': row['min_value'],
-        	                                         'max value': row['max_value']},
-                	                         'identifier': row['is_identifier'],
-                        	                 'branching logic': row['branching_logic'],
-                                	         'required?': row['required'],
-                                        	 'alignment': row['custom_alignment'],
-                                         	'question number': row['question_number'],
-       		                                 },},},indent=0, separators=(',',':')));	
+		return (json.dumps({
+                                        'form name': row['form_name'],
+                                        'section header': row['section_name'],
+                                         'field name': row['field_name'],
+                                         'field label': row['field_label'],
+                                         'field note': row['field_note'],
+                                         'field type': row['field_type'],
+                                         'choices': row['choices'],
+                                         'validation type': row['validation_type'],
+                                         'min value': row['min_value'],
+                                         'max value': row['max_value'],
+                                         'identifier': row['is_identifier'],
+                                         'branching logic': row['branching_logic'],
+                                         'required?': row['required'],
+                                         'alignment': row['custom_alignment'],
+                                         'question number': row['question_number'],
+                                        },indent=0, separators=(',',':')));
 	
 	def json2dj(self, fileName):
 		form2model = lambda form_name: form_name.title().replace('_','').replace(' ','').replace('-','').replace('/','').replace('(','').replace(')','');
@@ -392,24 +389,9 @@ class Command(BaseCommand):
 	def get_field_value(self, line, field):
 		"""
 		Determines the value of a field from the json representation.
-			
-		This function first finds the begining of the field name (not the value).
-		Then adds the length of the field to the index, and then adds another 3 to it. 
-		The additional 3 come from the way the Json is structured. A typical Json 'field' 
-		looks like this example: "identifier":"some_value". The added 3 index comes from 
-		the second quotation mark, the colon, and the third quotation.
-		
-		Then finds the length of the field_value and returns that substring using the determined indices.
 		"""
-		field_index = line.find('"' + field + '"');
-		field_index = field_index + len(field) + 4;
-		current_char = line[field_index];
-		field_len = 0;
-		while current_char != '"':
-			field_len += 1;
-			current_char = line[field_index+field_len];
-		field_value = line[field_index:field_index+field_len];
-		return field_value;
+		data = json.loads(line);
+		return str(data[field]);
 	
 	def get_FK(self, form_name):
 		return '    ' + form_name.lower() + ' = models.ForeignKey(' + form_name + ')\n';

@@ -243,8 +243,8 @@ class CompletionData(models.Model):
 
 
 class Brfss2009Section21EmotionalSupportAndLifeSatisfaction(models.Model):
-    brfss_2009_s21_1_a7efff = models.IntegerField(max_length=2000, blank=True, help_text='', null=True, verbose_name='21.1 How often do you get the social and emotional support you need?<br><br>INTERVIEWER NOTE: If asked, say \\', choices=[(1, 'Always'), (2, 'Usually'), (3, 'Sometimes'), (4, 'Rarely'), (5, 'Never'), (7, "Don't know / Not sure"), (9, 'Refused')])
-    brfss_2009_s21_2_02a4d6 = models.IntegerField(max_length=2000, blank=True, help_text='', null=True, verbose_name='21.2 In general, how satisfied are you with your life?<br><br>INTERVIEWER NOTE: If asked, say \\', choices=[(1, 'Very satisfied'), (2, 'Satisfied'), (3, 'Dissatisfied'), (4, 'Very dissatisfied'), (7, "Don't know / Not sure"), (9, 'Refused')])
+    brfss_2009_s21_1_a7efff = models.IntegerField(max_length=2000, blank=True, help_text='', null=True, verbose_name='21.1 How often do you get the social and emotional support you need?<br><br>INTERVIEWER NOTE: If asked, say "please include support from any source.""<br><br><br><br><div>INTERVIEWER NOTE - Please read:</div><div style=\'margin-left:40px;\'> Always<br>Usually<br>Sometimes<br>Rarely<br>Never </div><br><br><div><span style=\'color:red;\'>Do not read:<div style=\'margin-left:40px;\'> Don\'t know/ Not sure<br>Refused</div>"', choices=[(1, 'Always'), (2, 'Usually'), (3, 'Sometimes'), (4, 'Rarely'), (5, 'Never'), (7, "Don't know / Not sure"), (9, 'Refused')])
+    brfss_2009_s21_2_02a4d6 = models.IntegerField(max_length=2000, blank=True, help_text='', null=True, verbose_name='21.2 In general, how satisfied are you with your life?<br><br>INTERVIEWER NOTE: If asked, say "please include support from any source.""<br><br><br><br><div>INTERVIEWER NOTE - Please read:</div><div style=\'margin-left:40px;\'> Very satisfied<br>Satisfied<br>Dissatisfied<br>Very dissatisfied</div><br><br><div><span style=\'color:red;\'>Do not read:<div style=\'margin-left:40px;\'> Don\'t know/ Not sure<br>Refused</div>"', choices=[(1, 'Very satisfied'), (2, 'Satisfied'), (3, 'Dissatisfied'), (4, 'Very dissatisfied'), (7, "Don't know / Not sure"), (9, 'Refused')])
 
     class Meta:
 	 db_table = 'Brfss2009Section21EmotionalSupportAndLifeSatisfaction'
@@ -252,7 +252,7 @@ class Brfss2009Section21EmotionalSupportAndLifeSatisfaction(models.Model):
 
 class Brfss2009Module1Prediabetes(models.Model):
     brfss_2009_m1_1_3c9744 = models.IntegerField(max_length=2000, blank=True, help_text='', null=True, verbose_name='1. Have you had a test for high blood sugar or diabetes within the past three years?', choices=[(1, 'Yes'), (2, 'No'), (7, "Don't know / Not sure"), (9, 'Refused')])
-    brfss_2009_m1_2_2481a8 = models.CharField(help_text="1, Yes | 2, Yes, during pregnancy | 3, No | 7, Don't know / Not sure | 9, Refused", null=True, max_length=2000, verbose_name='2. Have you ever been told by a doctor or other health professional that you have pre-diabetes or borderline diabetes?<br><br>If \\', blank=True)
+    brfss_2009_m1_2_2481a8 = models.CharField(help_text="1, Yes | 2, Yes, during pregnancy | 3, No | 7, Don't know / Not sure | 9, Refused", null=True, max_length=2000, verbose_name='2. Have you ever been told by a doctor or other health professional that you have pre-diabetes or borderline diabetes?<br><br>If "Yes"" and respondent is female', blank=True)
 
     class Meta:
 	 db_table = 'Brfss2009Module1Prediabetes'

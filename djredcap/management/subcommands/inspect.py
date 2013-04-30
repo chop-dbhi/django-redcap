@@ -133,8 +133,8 @@ class Command(BaseCommand):
 				Run if there are values in the repeating_rows but the current depth
 				is 0, meaning all startrepeats have been closed with endrepeats
 				"""
-				repeating_rows = self.clean_list_space(repeating_rows);
-				repeating_rows = self.clean_list_endrepeat(repeating_rows);
+				repeating_rows = self.clean_list(repeating_rows);
+				#repeating_rows = self.clean_list_endrepeat(repeating_rows);
 				self.create_form_relations(repeating_rows,form_list,0,0);
 				repeating_rows = self.order_list(repeating_rows);
 				all_repeats.append(repeating_rows);
@@ -155,16 +155,18 @@ class Command(BaseCommand):
 				all_repeats = [];
 		return fout.name;
 
-	def clean_list_space(self, repeats_list):
+	def clean_list(self, repeats_list):
 		"""
 		Removes all values in a list that equal ''.
 		If there are nested lists, it recursively calls itself to search those
 		too.
 		"""
-		for j,item in enumerate(repeats_list):
+		for j,item in reversed(list(enumerate(repeats_list))):
 			if isinstance(item,list):
-				item = self.clean_list_space(item);
+				item = self.clean_list(item);
 			elif item == '':
+				repeats_list.pop(j);
+			elif item['field_name'] == 'endrepeat':
 				repeats_list.pop(j);
 		return repeats_list;
 
@@ -413,4 +415,4 @@ class Command(BaseCommand):
 		index = fileName.find('.');
 		fileName = fileName[:index];
 		return fileName;
-
+	

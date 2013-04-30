@@ -263,7 +263,7 @@ class Command(BaseCommand):
 		form2model = lambda form_name: form_name.title().replace('_','').replace(' ','').replace('-','').replace('/','').replace('(','').replace(')','');
 		
 		newFileName = self.remove_file_extension(os.path.basename(fileName));
-		fout = open(os.path.join(os.path.dirname(fileName),newFileName + '.py'), 'w+');
+		fout = open(os.path.join(os.path.dirname(fileName), 'models.py'), 'w+');
 
 		prev_form_name = None;
 		prev_fk_name = None;

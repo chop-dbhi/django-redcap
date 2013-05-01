@@ -77,6 +77,7 @@ class Command(BaseCommand):
 		last_form_name = None;
 		cur_depth = 0;
 		for row in reader:
+			#Remove the substring ${d} or ${s} from all field names
 			if row['field_name'].find('$') != -1:
 				index = row['field_name'].find('$');
 				row['field_name'] = row['field_name'][:index] + row['field_name'][index+4:];

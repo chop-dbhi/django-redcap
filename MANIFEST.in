@@ -2,4 +2,3 @@ include LICENSE
 include CHANGELOG
 include README.md
 global-exclude .DS_Store
-prune djredcap/tests

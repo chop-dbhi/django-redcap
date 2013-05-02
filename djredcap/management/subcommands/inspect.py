@@ -5,6 +5,8 @@ import csv
 import json
 import keyword
 import sys
+import re
+import inflect
 from django.core.management.base import BaseCommand, CommandError
 	
 header_keys = (
@@ -77,10 +79,6 @@ class Command(BaseCommand):
 		last_form_name = None;
 		cur_depth = 0;
 		for row in reader:
-			#Remove the substring ${d} or ${s} from all field names
-			if row['field_name'].find('$') != -1:
-				index = row['field_name'].find('$');
-				row['field_name'] = row['field_name'][:index] + row['field_name'][index+4:];
 			"""
 			Printing the list of repeating rows built below.
 			"""
@@ -135,7 +133,6 @@ class Command(BaseCommand):
 				is 0, meaning all startrepeats have been closed with endrepeats
 				"""
 				repeating_rows = self.clean_list(repeating_rows);
-				#repeating_rows = self.clean_list_endrepeat(repeating_rows);
 				self.create_form_relations(repeating_rows,form_list,0,0);
 				repeating_rows = self.order_list(repeating_rows);
 				all_repeats.append(repeating_rows);
@@ -167,19 +164,6 @@ class Command(BaseCommand):
 				item = self.clean_list(item);
 			elif item == '':
 				repeats_list.pop(j);
-			elif item['field_name'] == 'endrepeat':
-				repeats_list.pop(j);
-		return repeats_list;
-
-	def clean_list_endrepeat(self, repeats_list):
-		"""
-		Removes all values in a list where the field_name = 'endrepeat'.
-		If there are nested lists, the function is recursively called to
-		search them too.
-		"""
-		for j, item in enumerate(repeats_list):
-			if isinstance(item,list):
-				item = self.clean_list_endrepeat(item);
 			elif item['field_name'] == 'endrepeat':
 				repeats_list.pop(j);
 		return repeats_list;
@@ -245,19 +229,21 @@ class Command(BaseCommand):
 		return (json.dumps({
                                         'form name': row['form_name'],
                                         'section header': row['section_name'],
-                                         'field name': row['field_name'],
-                                         'field label': row['field_label'],
-                                         'field note': row['field_note'],
-                                         'field type': row['field_type'],
-                                         'choices': row['choices'],
-                                         'validation type': row['validation_type'],
-                                         'min value': row['min_value'],
-                                         'max value': row['max_value'],
-                                         'identifier': row['is_identifier'],
-                                         'branching logic': row['branching_logic'],
-                                         'required?': row['required'],
-                                         'alignment': row['custom_alignment'],
-                                         'question number': row['question_number'],
+					'fields': [{
+                                         	'field name': row['field_name'],
+                                         	'field label': row['field_label'],
+                                         	'field note': row['field_note'],
+                                         	'field type': row['field_type'],
+                                         	'choices': row['choices'],
+                                         	'validation type': row['validation_type'],
+                                         	'min value': row['min_value'],
+                                         	'max value': row['max_value'],
+                                         	'identifier': row['is_identifier'],
+                                         	'branching logic': row['branching_logic'],
+                                         	'required?': row['required'],
+                                         	'alignment': row['custom_alignment'],
+                                         	'question number': row['question_number'],
+						}]
                                         },indent=0, separators=(',',':')));
 	
 	def json2dj(self, fileName):
@@ -274,6 +260,7 @@ class Command(BaseCommand):
 	
 		fout.write('\n');	
 		for line in open(fileName,'r'):
+			
 			form_name = self.get_field_value(line, 'form name');
 			fk_name = None;
 		
@@ -281,7 +268,9 @@ class Command(BaseCommand):
 			if form_name.find('~') != -1:
 				form_name, fk_name = form_name.split('~');
 				fk_name = form2model(fk_name);
+				fk_name = self.make_singular(fk_name);
 			form_name = form2model(form_name);
+			form_name = self.make_singular(form_name);
 			#print 'fk_name ' + str(fk_name) + '	' + 'prev_fk ' + str(prev_fk_name);
 			if form_name != prev_form_name:
 				if prev_fk_name:
@@ -293,13 +282,14 @@ class Command(BaseCommand):
 				prev_fk_name = fk_name;
 				fout.write('class %s(models.Model):' % form_name);
 				fout.write('\n');
-				
-			column_name = self.get_field_value(line, 'field name');
-			att_name = column_name.lower();
-			comment_notes = [];
+			
 			extra_params = {};
+			comment_notes = [];
+			column_name,extra_params['verbose_name'] = self.remove_string_formatting(line);	
+			#column_name = self.get_field_value(line, 'field name');
+			att_name = column_name.lower();
 	
-			extra_params['verbose_name'] = self.get_field_value(line, 'field label');
+			#extra_params['verbose_name'] = self.get_field_value(line, 'field label');
 			
 			extra_params['help_text'] = self.get_field_value(line, 'field note');
 			
@@ -317,7 +307,8 @@ class Command(BaseCommand):
 				comment_notes.append('Field renamed to remove ending underscore');
 			if column_name != att_name:
 				comment_notes.append('Field name made lowercase.');
-			
+				
+
 			field_type, field_params, field_notes = self.get_field_type(line);
 			extra_params.update(field_params);
 			comment_notes.extend(field_notes);
@@ -407,13 +398,35 @@ class Command(BaseCommand):
 		to construct the inner Meta class for the model 
 		corresponding to the given database table name.
 		"""
+		print table_name;
+		table_name = str(table_name).lower();
+		print table_name;
 		return ['\n',
 			'    class Meta:\n',
 			'	 db_table = %r\n' % table_name,
 			'\n',
 			'\n'];
+	
 	def remove_file_extension(self,fileName):
 		index = fileName.find('.');
 		fileName = fileName[:index];
 		return fileName;
 	
+	def remove_string_formatting(self,line):
+		field_name = self.get_field_value(line,'field name');
+		field_label = self.get_field_value(line,'field label');
+		
+		if field_name.find('$') != -1:
+                	index = field_name.find('$');
+                	field_name = field_name[:index] + field_name[index+4:];
+                if field_label.find('$') != -1:
+                	field_label = re.sub(r'\$\w\d?\s','', field_label);
+		return field_name,field_label;
+		
+	def make_singular(self, field):
+		p = inflect.engine();
+		field_value = p.singular_noun(field);
+		if field_value is False:
+			return field;
+		else:
+			return field_value;

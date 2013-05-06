@@ -86,8 +86,13 @@ class Command(BaseCommand):
 				form_list[0] = row['form_name'];
 				if row['form_name'] != last_form_name:
 					if last_form_name:
-						self.print_list(all_repeats,fout);
+						#print form
+						#print full list
+						json_str = self.generate_json_form(row);
+						json_str = self.print_list(all_repeats,fout,json_str);
 						all_repeats = [];
+					elif last_form_name is None:
+						json_str = self.generate_json_form(row);
 					last_form_name = row['form_name'];
 			"""
 			Needed for special case csv's with repeats used, not needed otherwise.
@@ -141,7 +146,8 @@ class Command(BaseCommand):
 				cur_depth = 0;
 			elif cur_depth <= 0 and len(repeating_rows) == 0:
 				#Print a row normally
-				fout.write(self.generateJson(row));
+				#print one;
+				json_str = self.generate_json_field(row,json_str);
 				fout.write('\n');
 				cur_depth = 0;
 				form_list = [''];
@@ -149,7 +155,8 @@ class Command(BaseCommand):
 
 		if row['form_name'] != last_form_name:
 			if last_form_name:
-				self.print_list(all_repeats, fout);
+				json_str = self.generate_json_form(row);
+				json_str = self.print_list(all_repeats, fout, json_str);
 				all_repeats = [];
 		return fout.name;
 
@@ -196,7 +203,7 @@ class Command(BaseCommand):
 				orderList[0].append(item);
 		return orderList;		
 
-	def print_list(self, someList, fout):
+	def print_list(self, someList, fout, json_str):
 		"""
 		Prints every value in someList, including values in nested lists
 		"""
@@ -204,7 +211,7 @@ class Command(BaseCommand):
 			if isinstance(item,list):
 				self.print_list(item,fout);
 			else:	
-				fout.write(self.generateJson(item));
+				fout.write(self.generate_json_field(item,json_str));
 				fout.write('\n');
 
 	def last_inner_append(self,x,y,curDepth,targetDepth):
@@ -220,32 +227,34 @@ class Command(BaseCommand):
 			pass;
 		x.append(y);
 		return x;
+	def generate_json_form(self,row):
+		return ({	'form name': row['form_name'],
+				'section header': row['section_name'],
+				'fields': []});
 
-	def generateJson(self, row):
+	def generate_json_field(self, row, json_str):
 		"""
 		Generates the json for the given row. The json is formatted to 1 line for easier
 		search when generating the django models.
 		"""
-		return (json.dumps({
-                                        'form name': row['form_name'],
-                                        'section header': row['section_name'],
-					'fields': [{
-                                         	'field name': row['field_name'],
-                                         	'field label': row['field_label'],
-                                         	'field note': row['field_note'],
-                                         	'field type': row['field_type'],
-                                         	'choices': row['choices'],
-                                         	'validation type': row['validation_type'],
-                                         	'min value': row['min_value'],
-                                         	'max value': row['max_value'],
-                                         	'identifier': row['is_identifier'],
-                                         	'branching logic': row['branching_logic'],
-                                         	'required?': row['required'],
-                                         	'alignment': row['custom_alignment'],
-                                         	'question number': row['question_number'],
-						}]
-                                        },indent=0, separators=(',',':')));
-	
+		data = json.loads(json_str);			
+		data['fields'].append({
+                                         'field name': row['field_name'],
+                                         'field label': row['field_label'],
+                                         'field note': row['field_note'],
+                                         'field type': row['field_type'],
+                                         'choices': row['choices'],
+                                         'validation type': row['validation_type'],
+                                         'min value': row['min_value'],
+                                         'max value': row['max_value'],
+                                         'identifier': row['is_identifier'],
+                                         'branching logic': row['branching_logic'],
+                                         'required': row['required'],
+                                         'alignment': row['custom_alignment'],
+                                         'question number': row['question_number'],
+					})
+		return data;
+
 	def json2dj(self, fileName):
 		form2model = lambda form_name: form_name.title().replace('_','').replace(' ','').replace('-','').replace('/','').replace('(','').replace(')','');
 		

@@ -21,6 +21,12 @@ djredcap/tests/fixtures/cmp_single_form_with_rep_fields_start_with_repeat.json
 djredcap/tests/fixtures/cmp_single_form_with_rep_fields_start_with_repeat.py
 djredcap/tests/fixtures/cmp_single_form_without_rep_fields.json
 djredcap/tests/fixtures/cmp_single_form_without_rep_fields.py
+djredcap/tests/fixtures/input
+djredcap/tests/fixtures/input.json
+djredcap/tests/fixtures/input.json.py
+djredcap/tests/fixtures/input2
+djredcap/tests/fixtures/input2.json
+djredcap/tests/fixtures/input2.json.py
 djredcap/tests/fixtures/multi_form_with_rep_fields.csv
 djredcap/tests/fixtures/multi_form_without_rep_fields.csv
 djredcap/tests/fixtures/single_form_with_rep_fields_many_nested.csv

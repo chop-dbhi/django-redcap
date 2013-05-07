@@ -89,8 +89,7 @@ class Command(BaseCommand):
 					if last_form_name:
 						fout.write(json_str + '\n');
 						if all_repeats:
-							json_str = self.print_repeating_rows(all_repeats,fout);
-							print json_str;
+							json_str = self.get_repeating_json_list(all_repeats,fout);
 							self.print_repeats(json_str,fout);
 						json_str = self.generate_json_form(row);
 						all_repeats = [];
@@ -158,7 +157,7 @@ class Command(BaseCommand):
 		if row['form_name'] != last_form_name:
 			if last_form_name:
 				json_str = self.generate_json_form(row);
-				json_str = self.print_repeating_rows(all_repeats, fout);
+				json_str = self.get_repeating_json_list(all_repeats, fout);
 				self.print_repeats(json_str,fout);
 				all_repeats = [];
 		return fout.name;
@@ -206,12 +205,16 @@ class Command(BaseCommand):
 				orderList.append(item);
 		return orderList;		
 
-	def print_repeating_rows(self, all_repeats, fout):
+	def get_repeating_json_list(self, all_repeats, fout):
+		"""
+		Given a list of repeating fields from the csv file, this function
+		will return a list of json forms generated from the repeating fields.
+		"""
 		json_str = '';
 		all_json = [];
 		for item in all_repeats:
 			if isinstance(item,list):
-				all_json.append(self.print_repeating_rows(item,fout));
+				all_json.append(self.get_repeating_json_list(item,fout));
 			else:
 				if not json_str:
 					json_str = self.generate_json_form(item);
@@ -285,95 +288,81 @@ class Command(BaseCommand):
 		newFileName = self.remove_file_extension(os.path.basename(fileName));
 		fout = open(os.path.join(os.path.dirname(fileName), 'models.py'), 'w+');
 
-		prev_form_name = None;
-		prev_fk_name = None;
-		
 		fout.write('from %s import models' % self.db_module);
 		fout.write('\n');
 	
 		fout.write('\n');	
 		for line in open(fileName,'r'):
-			
-			form_name = self.get_field_value(line, 'form name');
+			field_num = 0;
+			data = json.loads(line);
+			form_name = data['form name'];
 			fk_name = None;
-		
-			#print form_name;
 			if form_name.find('~') != -1:
-				form_name, fk_name = form_name.split('~');
-				fk_name = form2model(fk_name);
-				fk_name = self.make_singular(fk_name);
-			form_name = form2model(form_name);
-			form_name = self.make_singular(form_name);
-			#print 'fk_name ' + str(fk_name) + '	' + 'prev_fk ' + str(prev_fk_name);
-			if form_name != prev_form_name:
-				if prev_fk_name:
-					fout.write(self.get_FK(prev_fk_name));
-				if prev_form_name:
-					for meta_line in self.get_meta(prev_form_name):
-						fout.write(meta_line);
-				prev_form_name = form_name;
-				prev_fk_name = fk_name;
-				fout.write('class %s(models.Model):' % form_name);
-				fout.write('\n');
-			
-			extra_params = {};
-			comment_notes = [];
-			column_name,extra_params['verbose_name'] = self.remove_string_formatting(line);	
-			#column_name = self.get_field_value(line, 'field name');
-			att_name = column_name.lower();
+                                form_name, fk_name = form_name.split('~');
+                                fk_name = form2model(fk_name);
+                                fk_name = self.make_singular(fk_name);
+                        form_name = form2model(form_name);
+                        form_name = self.make_singular(form_name);
+			fout.write('class %s(models.Model):' % form_name);
+                        fout.write('\n');
+			for field in data['fields']:
+				extra_params = {};
+				comment_notes = [];
+				column_name,extra_params['verbose_name'] = self.remove_string_formatting(field);	
+				#column_name = self.get_field_value(field, 'field name');
+				att_name = column_name.lower();
 	
-			#extra_params['verbose_name'] = self.get_field_value(line, 'field label');
+				#extra_params['verbose_name'] = self.get_field_value(field, 'field label');
 			
-			extra_params['help_text'] = self.get_field_value(line, 'field note');
+				extra_params['help_text'] = self.get_field_value(field, 'field note');
 			
-			if ' ' in att_name or '-' in att_name or keyword.iskeyword(att_name) or column_name != att_name:
-				extra_params['db_column'] = column_name;
+				if ' ' in att_name or '-' in att_name or keyword.iskeyword(att_name) or column_name != att_name:
+					extra_params['db_column'] = column_name;
 			
-			if ' ' in att_name:
-				att_name = att_name.replace(' ','_');
-				comment_notes.append('Field renamed to remove spaces.');
-			if '-' in att_name:
-				att_name = att_name.replace('-','_');
-				comment_notes.append('Field renamed to remove dashes.');
-			if att_name.endswith('_'):
-				att_name = att_name[:-1];
-				comment_notes.append('Field renamed to remove ending underscore');
-			if column_name != att_name:
-				comment_notes.append('Field name made lowercase.');
+				if ' ' in att_name:
+					att_name = att_name.replace(' ','_');
+					comment_notes.append('Field renamed to remove spaces.');
+				if '-' in att_name:
+					att_name = att_name.replace('-','_');
+					comment_notes.append('Field renamed to remove dashes.');
+				if att_name.endswith('_'):
+					att_name = att_name[:-1];
+					comment_notes.append('Field renamed to remove ending underscore');
+				if column_name != att_name:
+					comment_notes.append('Field name made lowercase.');
 				
 
-			field_type, field_params, field_notes = self.get_field_type(line);
-			extra_params.update(field_params);
-			comment_notes.extend(field_notes);
+				field_type, field_params, field_notes = self.get_field_type(field);
+				extra_params.update(field_params);
+				comment_notes.extend(field_notes);
 		
-			field_type += '('
+				field_type += '('
 
-			if keyword.iskeyword(att_name):
-				att_name += '_field';
-				comment_notes.append('Field renamed because it was a Python reserved word.');
-			if att_name[0].isdigit():
-				att_name = 'number_%s' % att_name;
-				extra_params['db_column'] = unicode(column_name);
-				comment_notes.append("Field renamed because it wasn't a valid python identifier.");
+				if keyword.iskeyword(att_name):
+					att_name += '_field';
+					comment_notes.append('Field renamed because it was a Python reserved word.');
+				if att_name[0].isdigit():
+					att_name = 'number_%s' % att_name;
+					extra_params['db_column'] = unicode(column_name);
+					comment_notes.append("Field renamed because it wasn't a valid python identifier.");
 		
-			if att_name == 'id' and field_type == 'AutoField(' and extra_params == {'primary_key': True}:
-				pass
-			field_desc = '%s = models.%s' % (att_name, field_type);
-			if extra_params:
-				if not field_desc.endswith('('):
-					field_desc += ', ';
-				field_desc += ', '.join(['%s=%r' % (k, v) for k, v in extra_params.items()])
-			field_desc += ')';
-			if comment_notes:
-				field_desc += ' # ' + ' '.join(comment_notes);
+				if att_name == 'id' and field_type == 'AutoField(' and extra_params == {'primary_key': True}:
+					pass
+				field_desc = '%s = models.%s' % (att_name, field_type);
+				if extra_params:
+					if not field_desc.endswith('('):
+						field_desc += ', ';
+					field_desc += ', '.join(['%s=%r' % (k, v) for k, v in extra_params.items()])
+				field_desc += ')';
+				if comment_notes:
+					field_desc += ' # ' + ' '.join(comment_notes);
 		
-			fout.write('    %s\n' % field_desc);
-		#final meta class
-		if fk_name:
-			fout.write(self.get_FK(fk_name));
-		for meta_line in self.get_meta(form_name):
-			fout.write(meta_line);
-
+				fout.write('    %s\n' % field_desc);
+			#final meta class
+                        if fk_name:
+				fout.write(self.get_FK(fk_name));
+                        for meta_line in self.get_meta(form_name):
+                                fout.write(meta_line);
 	def get_field_type(self, line):
 		"""
 		Given the database connection, the table name, and the cursor row description,
@@ -383,7 +372,7 @@ class Command(BaseCommand):
 		field_params = {};
 		field_notes = [];
 	
-		required = self.get_field_value(line,'required?');
+		required = self.get_field_value(line,'required');
 		validation_type = self.get_field_value(line,'validation type');
 		field_type = self.get_field_value(line,'field type');
 
@@ -419,8 +408,7 @@ class Command(BaseCommand):
 		"""
 		Determines the value of a field from the json representation.
 		"""
-		data = json.loads(line);
-		return str(data[field]);
+		return str(line[field]);
 	
 	def get_FK(self, form_name):
 		return '    ' + form_name.lower() + ' = models.ForeignKey(' + form_name + ')\n';
@@ -431,9 +419,7 @@ class Command(BaseCommand):
 		to construct the inner Meta class for the model 
 		corresponding to the given database table name.
 		"""
-		print table_name;
 		table_name = str(table_name).lower();
-		print table_name;
 		return ['\n',
 			'    class Meta:\n',
 			'	 db_table = %r\n' % table_name,

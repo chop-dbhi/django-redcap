@@ -78,6 +78,7 @@ class Command(BaseCommand):
 		form_list = [''];
 		last_form_name = None;
 		cur_depth = 0;
+		json_str = '';
 		for row in reader:
 			"""
 			Printing the list of repeating rows built below.
@@ -86,10 +87,12 @@ class Command(BaseCommand):
 				form_list[0] = row['form_name'];
 				if row['form_name'] != last_form_name:
 					if last_form_name:
-						#print form
-						#print full list
+						fout.write(json_str + '\n');
+						if all_repeats:
+							json_str = self.print_repeating_rows(all_repeats,fout);
+							print json_str;
+							self.print_repeats(json_str,fout);
 						json_str = self.generate_json_form(row);
-						json_str = self.print_list(all_repeats,fout,json_str);
 						all_repeats = [];
 					elif last_form_name is None:
 						json_str = self.generate_json_form(row);
@@ -146,17 +149,17 @@ class Command(BaseCommand):
 				cur_depth = 0;
 			elif cur_depth <= 0 and len(repeating_rows) == 0:
 				#Print a row normally
-				#print one;
 				json_str = self.generate_json_field(row,json_str);
-				fout.write('\n');
 				cur_depth = 0;
 				form_list = [''];
 				repeating_rows = [];
-
+		
+		fout.write(json_str + '\n');
 		if row['form_name'] != last_form_name:
 			if last_form_name:
 				json_str = self.generate_json_form(row);
-				json_str = self.print_list(all_repeats, fout, json_str);
+				json_str = self.print_repeating_rows(all_repeats, fout);
+				self.print_repeats(json_str,fout);
 				all_repeats = [];
 		return fout.name;
 
@@ -195,13 +198,35 @@ class Command(BaseCommand):
 		the embedded lists and order them in order of appearence, while keeping values in their
 		correct list, even if they were seperated by another list.
 		"""
-		orderList = [[]];
+		orderList = [];
 		for j,item in enumerate(repeats_list):
 			if isinstance(item,list):
 				orderList.append(self.order_list(item));
 			else:
-				orderList[0].append(item);
+				orderList.append(item);
 		return orderList;		
+
+	def print_repeating_rows(self, all_repeats, fout):
+		json_str = '';
+		all_json = [];
+		for item in all_repeats:
+			if isinstance(item,list):
+				all_json.append(self.print_repeating_rows(item,fout));
+			else:
+				if not json_str:
+					json_str = self.generate_json_form(item);
+				json_str = self.generate_json_field(item,json_str);
+		all_json.append(json_str);
+		return all_json;	
+	
+	def print_repeats(self,json_repeating_rows,fout):
+		for item in json_repeating_rows:
+			if isinstance(item,list):
+				self.print_repeats(item,fout);
+			else:
+				if item != '':
+					fout.write(item);
+					fout.write('\n');
 
 	def print_list(self, someList, fout, json_str):
 		"""
@@ -209,10 +234,9 @@ class Command(BaseCommand):
 		"""
 		for item in someList:
 			if isinstance(item,list):
-				self.print_list(item,fout);
+				self.print_list(item,fout,json_str);
 			else:	
-				fout.write(self.generate_json_field(item,json_str));
-				fout.write('\n');
+				json_str = self.generate_json_field(item,json_str);
 
 	def last_inner_append(self,x,y,curDepth,targetDepth):
 		"""
@@ -228,16 +252,16 @@ class Command(BaseCommand):
 		x.append(y);
 		return x;
 	def generate_json_form(self,row):
-		return ({	'form name': row['form_name'],
-				'section header': row['section_name'],
-				'fields': []});
+		return (json.dumps({	'form name': row['form_name'],
+					'section header': row['section_name'],
+					'fields': []},indent=0,separators=(',',': ')));
 
 	def generate_json_field(self, row, json_str):
 		"""
 		Generates the json for the given row. The json is formatted to 1 line for easier
 		search when generating the django models.
 		"""
-		data = json.loads(json_str);			
+		data = json.loads(str(json_str));		
 		data['fields'].append({
                                          'field name': row['field_name'],
                                          'field label': row['field_label'],
@@ -253,7 +277,7 @@ class Command(BaseCommand):
                                          'alignment': row['custom_alignment'],
                                          'question number': row['question_number'],
 					})
-		return data;
+		return json.dumps(data);
 
 	def json2dj(self, fileName):
 		form2model = lambda form_name: form_name.title().replace('_','').replace(' ','').replace('-','').replace('/','').replace('(','').replace(')','');

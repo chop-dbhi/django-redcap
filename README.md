@@ -5,6 +5,15 @@ Utilities for porting REDCap projects to and from Django models.
 
 Install and Setup
 -----------------
+
+**Dependencies**
+
+`inflect`
+
+```bash
+easy_install inflect
+```
+
 django-redcap is available on [PyPi][0]. Use Pip to install it:
 
 ```bash

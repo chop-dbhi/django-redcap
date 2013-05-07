@@ -13,7 +13,7 @@ Install and Setup
 ```bash
 easy_install inflect
 ```
-
+--------------------
 django-redcap is available on [PyPi][0]. Use Pip to install it:
 
 ```bash

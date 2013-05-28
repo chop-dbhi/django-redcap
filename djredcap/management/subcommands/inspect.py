@@ -84,6 +84,8 @@ class Command(BaseCommand):
 			Printing the list of repeating rows built below.
 			"""
 			if row['form_name']:
+				row['form_name'] = self.form2model(row['form_name']);
+				row['form_name'] = self.make_singular(row['form_name']);
 				form_list[0] = row['form_name'];
 				if row['form_name'] != last_form_name:
 					if last_form_name:
@@ -113,8 +115,8 @@ class Command(BaseCommand):
 			if row['field_name'].find('startrepeat') != -1:
 				repeat_info = row['field_name'].strip().split();
 				row['field_name'] = repeat_info[0];
-				form_list.append(''.join(repeat_info[3:]));
-			
+				form_list.append(self.make_singular(self.form2model(' '.join(repeat_info[3:]))));
+					
 				repeating_rows = self.last_inner_append(repeating_rows, [row],0,cur_depth);
 				cur_depth = cur_depth + 1;
 			elif row['field_name'].find('endrepeat') != -1:
@@ -126,7 +128,7 @@ class Command(BaseCommand):
 			elif row['field_name'].find(' repeat ') != -1:
 				repeat_info = row['field_name'].strip().split();
 				row['field_name'] = repeat_info[0];
-				form_list.append(''.join(repeat_info[3:]));
+				form_list.append(self.make_singular(self.form2model(' '.join(repeat_info[3:]))));
 
 				repeating_rows = self.last_inner_append(repeating_rows, [row],0,cur_depth);
 				cur_depth = cur_depth - 1;
@@ -187,7 +189,7 @@ class Command(BaseCommand):
 		for j, item in enumerate(repeats_list):
 			if isinstance(item,list):
 				num_lists = num_lists + 1;
-				item = self.create_form_relations(item, form_list, form_index+num_lists, form_index);
+				self.create_form_relations(item, form_list, form_index+num_lists, form_index);
 			else:
 				item['form_name'] = form_list[form_index] + '~' + form_list[prev_form_index];
 
@@ -197,12 +199,12 @@ class Command(BaseCommand):
 		the embedded lists and order them in order of appearence, while keeping values in their
 		correct list, even if they were seperated by another list.
 		"""
-		orderList = [];
+		orderList = [[]];
 		for j,item in enumerate(repeats_list):
 			if isinstance(item,list):
 				orderList.append(self.order_list(item));
 			else:
-				orderList.append(item);
+				orderList[0].append(item);
 		return orderList;		
 
 	def get_repeating_json_list(self, all_repeats, fout):
@@ -283,8 +285,6 @@ class Command(BaseCommand):
 		return json.dumps(data);
 
 	def json2dj(self, fileName):
-		form2model = lambda form_name: form_name.title().replace('_','').replace(' ','').replace('-','').replace('/','').replace('(','').replace(')','');
-		
 		newFileName = self.remove_file_extension(os.path.basename(fileName));
 		fout = open(os.path.join(os.path.dirname(fileName), 'models.py'), 'w+');
 
@@ -299,10 +299,10 @@ class Command(BaseCommand):
 			fk_name = None;
 			if form_name.find('~') != -1:
                                 form_name, fk_name = form_name.split('~');
-                                fk_name = form2model(fk_name);
-                                fk_name = self.make_singular(fk_name);
-                        form_name = form2model(form_name);
-                        form_name = self.make_singular(form_name);
+				#form_name = self.form2model(form_name);
+				#form_name = self.make_singular(form_name);
+                               	#fk_name = self.form2model(fk_name);
+                                #fk_name = self.make_singular(fk_name);
 			fout.write('class %s(models.Model):' % form_name);
                         fout.write('\n');
 			for field in data['fields']:
@@ -449,3 +449,7 @@ class Command(BaseCommand):
 			return field;
 		else:
 			return field_value;
+	
+	def form2model(self, form_name):
+		form_name = form_name.replace('_', ' ').replace('-','').replace('/','').replace('(','').replace(')','');
+		return form_name.title().replace(' ','');

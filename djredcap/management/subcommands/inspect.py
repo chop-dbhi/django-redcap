@@ -73,6 +73,7 @@ class Command(BaseCommand):
 		
 		#repeating_rows is a group of repeating rows located within a form.
 		#all_repeats is all of the repeating rows for that form.
+		all_form_names = [];
 		repeating_rows = [];
 		all_repeats = [];
 		form_list = [''];
@@ -89,6 +90,8 @@ class Command(BaseCommand):
 				form_list[0] = row['form_name'];
 				if row['form_name'] != last_form_name:
 					if last_form_name:
+						row['form_name'] = self.check_duplicates(all_form_names,row['form_name']);
+						all_form_names.append(row['form_name']);
 						fout.write(json_str + '\n');
 						if all_repeats:
 							json_str = self.get_repeating_json_list(all_repeats,fout);
@@ -115,7 +118,10 @@ class Command(BaseCommand):
 			if row['field_name'].find('startrepeat') != -1:
 				repeat_info = row['field_name'].strip().split();
 				row['field_name'] = repeat_info[0];
-				form_list.append(self.make_singular(self.form2model(' '.join(repeat_info[3:]))));
+				form_name = self.make_singular(self.form2model(' '.join(repeat_info[3:])));
+				form_name = self.check_duplicates(all_form_names,form_name);
+				form_list.append(form_name);
+				all_form_names.append(form_name);
 					
 				repeating_rows = self.last_inner_append(repeating_rows, [row],0,cur_depth);
 				cur_depth = cur_depth + 1;
@@ -128,7 +134,10 @@ class Command(BaseCommand):
 			elif row['field_name'].find(' repeat ') != -1:
 				repeat_info = row['field_name'].strip().split();
 				row['field_name'] = repeat_info[0];
-				form_list.append(self.make_singular(self.form2model(' '.join(repeat_info[3:]))));
+				form_name = self.make_singular(self.form2model(' '.join(repeat_info[3:])));
+				form_name = self.check_duplicates(all_form_names,form_name);
+				form_list.append(form_name);
+				all_form_names.append(form_name);
 
 				repeating_rows = self.last_inner_append(repeating_rows, [row],0,cur_depth);
 				cur_depth = cur_depth - 1;
@@ -189,9 +198,10 @@ class Command(BaseCommand):
 		for j, item in enumerate(repeats_list):
 			if isinstance(item,list):
 				num_lists = num_lists + 1;
-				self.create_form_relations(item, form_list, form_index+num_lists, form_index);
+				num_lists += self.create_form_relations(item, form_list, form_index+num_lists, form_index);
 			else:
-				item['form_name'] = form_list[form_index] + '~' + form_list[prev_form_index];
+				item['form_name'] = form_list[form_index+num_lists] + '~' + form_list[prev_form_index];
+		return num_lists;
 
 	def order_list(self, repeats_list):
 		"""
@@ -256,6 +266,23 @@ class Command(BaseCommand):
 			pass;
 		x.append(y);
 		return x;
+		
+	def check_duplicates(self, form_names_list, form_name):
+		for name in form_names_list:
+			if name == form_name:
+				print name + ' ' + form_name;
+				endDigit = re.search('(\d+)$',form_name);
+				if endDigit:
+					endDigit = endDigit.start();
+					form_name = list(form_name);
+					form_name[endDigit:] = str(int("".join(form_name[endDigit:]))+1);
+					form_name = "".join(form_name);
+				else:
+					form_name+=str(1);
+				form_name = self.check_duplicates(form_names_list,form_name);
+ 		print form_name;
+		return form_name	
+
 	def generate_json_form(self,row):
 		return (json.dumps({	'form name': row['form_name'],
 					'section header': row['section_name'],

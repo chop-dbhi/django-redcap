@@ -127,7 +127,7 @@ targeted_mito_panel${d}_type,prior_genetic_testing,,text,What was the type of th
 targeted_mito_panel${d}_results,prior_genetic_testing,,dropdown,Results of $s targeted mitochondrial panel,"1, Normal | 2, Variant Positive",,,,,,[targeted_mito_single_or_panel(2)]='1',,,
 gene startrepeat 5 Gene,prior_genetic_testing,,text,$s gene on $s1 targeted mitochondrial panel that contained mutation,,,,,,,[targeted_mito_single_or_panel(2)]='1',,,
 mdna_change repeat 5 mDNA change,prior_genetic_testing,,text,$s change in mDNA on $s2 gene on $s1 targeted mitochondrial panel,,,,,,,[targeted_mito_single_or_panel(2)]='1',,,
-vus_mdna repeat 5  mDNA Variant of Unknown Significance,prior_genetic_testing,,text,$s variant of unknown significance on $s2 gene on  $s1 targeted mitochondrial panel,,,,,,,[targeted_mito_single_or_panel(2)]='1',,,
+vus_mdna repeat 5 mDNA Variant of Unknown Significance,prior_genetic_testing,,text,$s variant of unknown significance on $s2 gene on  $s1 targeted mitochondrial panel,,,,,,,[targeted_mito_single_or_panel(2)]='1',,,
  endrepeat,,,,,,,,,,,,,,
  endrepeat,,,,,,,,,,,,,,
 whole_mito_sequencing${d}_sample startrepeat 5 Whole Mito Gene Seq,prior_genetic_testing,Whole Mitochondrial Gene Sequencing,checkbox_other,Sample type for $s whole mitochondrial genome sequencing,"1, blood | 2, urine | 3, muscle | 4, saliva | 5, other",,,,,,[mito_analysis_type(2)]='1',,,

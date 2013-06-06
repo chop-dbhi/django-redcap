@@ -120,8 +120,14 @@ class Command(BaseCommand):
 				row['field_name'] = repeat_info[0];
 				form_name = self.make_singular(self.form2model(' '.join(repeat_info[3:])));
 				form_name = self.check_duplicates(all_form_names,form_name);
+			
+				form_name = form_name + ' ' + repeat_info[2];
+				if row['field_name'].find('$'):
+                                	split_name = form_name.split(' ');
+                                	form_name = split_name[0] + '$' + ' ' + split_name[1];
+
 				form_list.append(form_name);
-				all_form_names.append(form_name);
+				all_form_names.append(form_name.split(' ')[0]);
 					
 				repeating_rows = self.last_inner_append(repeating_rows, [row],0,cur_depth);
 				cur_depth = cur_depth + 1;
@@ -136,15 +142,19 @@ class Command(BaseCommand):
 				row['field_name'] = repeat_info[0];
 				form_name = self.make_singular(self.form2model(' '.join(repeat_info[3:])));
 				form_name = self.check_duplicates(all_form_names,form_name);
+				
+				form_name = form_name + ' ' + repeat_info[2];
+				if row['field_name'].find('$'):
+                                	split_name = form_name.split(' ');
+                                	form_name = split_name[0] + '$' + ' ' + split_name[1];
 				form_list.append(form_name);
-				all_form_names.append(form_name);
+				all_form_names.append(form_name.split(' ')[0]);
 
 				repeating_rows = self.last_inner_append(repeating_rows, [row],0,cur_depth);
 				cur_depth = cur_depth - 1;
 				repeating_rows = self.last_inner_append(repeating_rows,'',0,cur_depth);
 			elif len(repeating_rows) > 0:
 				repeating_rows = self.last_inner_append(repeating_rows, row,0,cur_depth);
-			
 			if cur_depth <= 0 and len(repeating_rows) > 0:
 				"""
 				Run if there are values in the repeating_rows but the current depth
@@ -270,7 +280,6 @@ class Command(BaseCommand):
 	def check_duplicates(self, form_names_list, form_name):
 		for name in form_names_list:
 			if name == form_name:
-				print name + ' ' + form_name;
 				endDigit = re.search('(\d+)$',form_name);
 				if endDigit:
 					endDigit = endDigit.start();
@@ -278,9 +287,8 @@ class Command(BaseCommand):
 					form_name[endDigit:] = str(int("".join(form_name[endDigit:]))+1);
 					form_name = "".join(form_name);
 				else:
-					form_name+=str(1);
+					form_name+=str(2);
 				form_name = self.check_duplicates(form_names_list,form_name);
- 		print form_name;
 		return form_name	
 
 	def generate_json_form(self,row):
@@ -326,10 +334,10 @@ class Command(BaseCommand):
 			fk_name = None;
 			if form_name.find('~') != -1:
                                 form_name, fk_name = form_name.split('~');
-				#form_name = self.form2model(form_name);
-				#form_name = self.make_singular(form_name);
-                               	#fk_name = self.form2model(fk_name);
-                                #fk_name = self.make_singular(fk_name);
+				fk_name = fk_name.split(' ')[0];
+				form_name = form_name.split(' ')[0];
+			if form_name.find('$') != -1:
+				form_name = form_name[:-1];
 			fout.write('class %s(models.Model):' % form_name);
                         fout.write('\n');
 			for field in data['fields']:

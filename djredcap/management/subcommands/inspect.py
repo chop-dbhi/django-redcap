@@ -118,13 +118,10 @@ class Command(BaseCommand):
 			if row['field_name'].find('startrepeat') != -1:
 				repeat_info = row['field_name'].strip().split();
 				row['field_name'] = repeat_info[0];
-				form_name = self.make_singular(self.form2model(' '.join(repeat_info[3:])));
+				form_name = self.make_singular(self.form2model('_'.join(repeat_info[3:])));
 				form_name = self.check_duplicates(all_form_names,form_name);
 			
 				form_name = form_name + ' ' + repeat_info[2];
-				if row['field_name'].find('$'):
-                                	split_name = form_name.split(' ');
-                                	form_name = split_name[0] + '$' + ' ' + split_name[1];
 
 				form_list.append(form_name);
 				all_form_names.append(form_name.split(' ')[0]);
@@ -140,13 +137,13 @@ class Command(BaseCommand):
 			elif row['field_name'].find(' repeat ') != -1:
 				repeat_info = row['field_name'].strip().split();
 				row['field_name'] = repeat_info[0];
-				form_name = self.make_singular(self.form2model(' '.join(repeat_info[3:])));
+				form_name = self.make_singular(self.form2model('_'.join(repeat_info[3:])));
 				form_name = self.check_duplicates(all_form_names,form_name);
 				
 				form_name = form_name + ' ' + repeat_info[2];
-				if row['field_name'].find('$'):
-                                	split_name = form_name.split(' ');
-                                	form_name = split_name[0] + '$' + ' ' + split_name[1];
+				#if row['field_name'].find('$'):
+                                #	split_name = form_name.split(' ');
+                                #	form_name = split_name[0] + '$' + ' ' + split_name[1];
 				form_list.append(form_name);
 				all_form_names.append(form_name.split(' ')[0]);
 
@@ -330,12 +327,12 @@ class Command(BaseCommand):
 		for line in open(fileName,'r'):
 			field_num = 0;
 			data = json.loads(line);
-			form_name = data['form name'];
+			form_name = data['form name'].replace('_','');
 			fk_name = None;
 			if form_name.find('~') != -1:
                                 form_name, fk_name = form_name.split('~');
-				fk_name = fk_name.split(' ')[0];
-				form_name = form_name.split(' ')[0];
+				fk_name = fk_name.split(' ')[0].replace('_','');
+				form_name = form_name.split(' ')[0].replace('_','');
 			if form_name.find('$') != -1:
 				form_name = form_name[:-1];
 			fout.write('class %s(models.Model):' % form_name);
@@ -486,5 +483,5 @@ class Command(BaseCommand):
 			return field_value;
 	
 	def form2model(self, form_name):
-		form_name = form_name.replace('_', ' ').replace('-','').replace('/','').replace('(','').replace(')','');
+		form_name = form_name.replace('-','').replace('/','').replace('(','').replace(')','');
 		return form_name.title().replace(' ','');

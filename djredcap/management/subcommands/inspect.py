@@ -496,13 +496,10 @@ class Command(BaseCommand):
 		if field_name.find('$') != -1:
                 	index = field_name.find('$');
                 	field_name = field_name[:index] + field_name[index+4:];
-		print field_label;
                 if field_label.find('$') != -1:
                 	field_label = re.sub(r'\$\w\d?\s','', field_label);
 		if field_label.find('$placeholder') != -1:
 			field_label = re.sub('\$placeholder','', field_label);
-		print field_label;
-		print '\n'
 		return field_name,field_label;
 		
 	def make_singular(self, field):

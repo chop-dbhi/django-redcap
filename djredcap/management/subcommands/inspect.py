@@ -80,6 +80,24 @@ class Command(BaseCommand):
 		last_form_name = None;
 		cur_depth = 0;
 		json_str = '';
+		
+		#create record form
+		recordDict = {};
+		recordDict['form_name'] = 'Record';
+		recordDict['section_name'] = 'Record';
+		all_form_names.append(recordDict['form_name']);
+		json_str = self.generate_json_form(recordDict);
+		fout.write(json_str + '\n');
+		
+		json_str = '';
+		
+		
+		#record_form_name = 'Record 1';
+		#form_list.append(record_form_name);
+		#all_form_names.append(record_form_name);
+		#repeating_rows = self.last_inner_append(repeating_rows,[''],0,cur_depth);
+		#cur_depth = 1;
+
 		for row in reader:
 			"""
 			Printing the list of repeating rows built below.
@@ -89,6 +107,7 @@ class Command(BaseCommand):
 				row['form_name'] = self.make_singular(row['form_name']);
 				form_list[0] = row['form_name'];
 				if row['form_name'] != last_form_name:
+					new_form_name = row['form_name'] + ' 1~Record';
 					if last_form_name:
 						row['form_name'] = self.check_duplicates(all_form_names,row['form_name']);
 						all_form_names.append(row['form_name']);
@@ -96,10 +115,10 @@ class Command(BaseCommand):
 						if all_repeats:
 							json_str = self.get_repeating_json_list(all_repeats,fout);
 							self.print_repeats(json_str,fout);
-						json_str = self.generate_json_form(row);
+						json_str = self.generate_json_form(row,new_form_name);
 						all_repeats = [];
 					elif last_form_name is None:
-						json_str = self.generate_json_form(row);
+						json_str = self.generate_json_form(row,new_form_name);
 					last_form_name = row['form_name'];
 			"""
 			Needed for special case csv's with repeats used, not needed otherwise.
@@ -152,11 +171,13 @@ class Command(BaseCommand):
 				repeating_rows = self.last_inner_append(repeating_rows,'',0,cur_depth);
 			elif len(repeating_rows) > 0:
 				repeating_rows = self.last_inner_append(repeating_rows, row,0,cur_depth);
+
 			if cur_depth <= 0 and len(repeating_rows) > 0:
 				"""
 				Run if there are values in the repeating_rows but the current depth
 				is 0, meaning all startrepeats have been closed with endrepeats
 				"""
+				form_list[0] = form_list[0] + ' 1'
 				repeating_rows = self.clean_list(repeating_rows);
 				self.create_form_relations(repeating_rows,form_list,0,0);
 				repeating_rows = self.order_list(repeating_rows);
@@ -288,8 +309,12 @@ class Command(BaseCommand):
 				form_name = self.check_duplicates(form_names_list,form_name);
 		return form_name	
 
-	def generate_json_form(self,row):
-		return (json.dumps({	'form name': row['form_name'],
+	def generate_json_form(self,row,form_name = None):
+		if form_name:
+			fname = form_name;
+		else:
+			fname = row['form_name'];
+		return (json.dumps({	'form name': fname,
 					'section header': row['section_name'],
 					'fields': []},indent=0,separators=(',',': ')));
 
@@ -298,8 +323,9 @@ class Command(BaseCommand):
 		Generates the json for the given row. The json is formatted to 1 line for easier
 		search when generating the django models.
 		"""
-		data = json.loads(str(json_str));		
-		data['fields'].append({
+		data = json.loads(str(json_str));
+		if row:		
+			data['fields'].append({
                                          'field name': row['field_name'],
                                          'field label': row['field_label'],
                                          'field note': row['field_note'],

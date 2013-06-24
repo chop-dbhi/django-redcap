@@ -371,7 +371,7 @@ class Command(BaseCommand):
 				att_name = column_name.lower();
 	
 				#extra_params['verbose_name'] = self.get_field_value(field, 'field label');
-			
+				field['field note']=re.sub('$[A-Z]*[a-z]*','',field['field note'])
 				extra_params['help_text'] = self.get_field_value(field, 'field note');
 			
 				if ' ' in att_name or '-' in att_name or keyword.iskeyword(att_name) or column_name != att_name:
@@ -496,8 +496,13 @@ class Command(BaseCommand):
 		if field_name.find('$') != -1:
                 	index = field_name.find('$');
                 	field_name = field_name[:index] + field_name[index+4:];
+		print field_label;
                 if field_label.find('$') != -1:
                 	field_label = re.sub(r'\$\w\d?\s','', field_label);
+		if field_label.find('$placeholder') != -1:
+			field_label = re.sub('\$placeholder','', field_label);
+		print field_label;
+		print '\n'
 		return field_name,field_label;
 		
 	def make_singular(self, field):

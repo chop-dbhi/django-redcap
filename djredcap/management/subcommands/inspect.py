@@ -90,19 +90,10 @@ class Command(BaseCommand):
 		fout.write(json_str + '\n');
 		
 		json_str = '';
-		
-		
-		#record_form_name = 'Record 1';
-		#form_list.append(record_form_name);
-		#all_form_names.append(record_form_name);
-		#repeating_rows = self.last_inner_append(repeating_rows,[''],0,cur_depth);
-		#cur_depth = 1;
 
 		for row in reader:
-			"""
-			Printing the list of repeating rows built below.
-			"""
 			if row['form_name']:
+				#clean up form name
 				row['form_name'] = self.form2model(row['form_name']);
 				row['form_name'] = self.make_singular(row['form_name']);
 				form_list[0] = row['form_name'];
@@ -160,9 +151,6 @@ class Command(BaseCommand):
 				form_name = self.check_duplicates(all_form_names,form_name);
 				
 				form_name = form_name + ' ' + repeat_info[2];
-				#if row['field_name'].find('$'):
-                                #	split_name = form_name.split(' ');
-                                #	form_name = split_name[0] + '$' + ' ' + split_name[1];
 				form_list.append(form_name);
 				all_form_names.append(form_name.split(' ')[0]);
 
@@ -171,7 +159,6 @@ class Command(BaseCommand):
 				repeating_rows = self.last_inner_append(repeating_rows,'',0,cur_depth);
 			elif len(repeating_rows) > 0:
 				repeating_rows = self.last_inner_append(repeating_rows, row,0,cur_depth);
-
 			if cur_depth <= 0 and len(repeating_rows) > 0:
 				"""
 				Run if there are values in the repeating_rows but the current depth
@@ -203,7 +190,7 @@ class Command(BaseCommand):
 
 	def clean_list(self, repeats_list):
 		"""
-		Removes all values in a list that equal ''.
+		Removes all values in a list that equal '' or 'endrepeat':
 		If there are nested lists, it recursively calls itself to search those
 		too.
 		"""
@@ -236,6 +223,8 @@ class Command(BaseCommand):
 		Given a list of repeating rows created in the csv2json function, this list will pull out all
 		the embedded lists and order them in order of appearence, while keeping values in their
 		correct list, even if they were seperated by another list.
+		
+		Ex: [a[b[c d]e]f] -> [[a f][b e][c d]]
 		"""
 		orderList = [[]];
 		for j,item in enumerate(repeats_list):
@@ -263,6 +252,10 @@ class Command(BaseCommand):
 		return all_json;	
 	
 	def print_repeats(self,json_repeating_rows,fout):
+		"""
+		json_repeating_rows is a list of lists with fields inside of 
+		those lists.
+		"""
 		for item in json_repeating_rows:
 			if isinstance(item,list):
 				self.print_repeats(item,fout);
@@ -296,6 +289,12 @@ class Command(BaseCommand):
 		return x;
 		
 	def check_duplicates(self, form_names_list, form_name):
+		"""
+		Searches for duplicate form_names in form_names_list. If one is found
+		a number(2) is appended to the end of form_name. If the new form_name is a 
+		duplicate, the number at the end is incremented until no duplicates are
+		found.
+		"""
 		for name in form_names_list:
 			if name == form_name:
 				endDigit = re.search('(\d+)$',form_name);
@@ -355,12 +354,13 @@ class Command(BaseCommand):
 			data = json.loads(line);
 			form_name = data['form name'].replace('_','');
 			fk_name = None;
+
+			#extracting foreign key from form name
 			if form_name.find('~') != -1:
                                 form_name, fk_name = form_name.split('~');
 				fk_name = fk_name.split(' ')[0].replace('_','');
 				form_name = form_name.split(' ')[0].replace('_','');
-			if form_name.find('$') != -1:
-				form_name = form_name[:-1];
+
 			fout.write('class %s(models.Model):' % form_name);
                         fout.write('\n');
 			for field in data['fields']:
@@ -469,6 +469,9 @@ class Command(BaseCommand):
 		return str(line[field]);
 	
 	def get_FK(self, form_name):
+		"""
+		Returns foreign key line needed in repeating models
+		"""
 		return '    ' + form_name.lower() + ' = models.ForeignKey(' + form_name + ')\n';
 
 	def get_meta(self, table_name):
@@ -490,6 +493,9 @@ class Command(BaseCommand):
 		return fileName;
 	
 	def remove_string_formatting(self,line):
+		"""
+		Removes various junk from field_names and field_labels
+		"""
 		field_name = self.get_field_value(line,'field name');
 		field_label = self.get_field_value(line,'field label');
 		
@@ -511,5 +517,8 @@ class Command(BaseCommand):
 			return field_value;
 	
 	def form2model(self, form_name):
+		"""
+		Removes puncuation from form_name
+		"""
 		form_name = form_name.replace('-','').replace('/','').replace('(','').replace(')','');
 		return form_name.title().replace(' ','');

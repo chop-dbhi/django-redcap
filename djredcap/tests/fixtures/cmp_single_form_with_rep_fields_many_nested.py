@@ -1,53 +1,74 @@
 from django.db import models
 
-class PriorGeneticTesting(models.Model):
-    mito_combo_analysis_loc = models.CharField(help_text='', null=True, max_length=2000, verbose_name='Lab where $s combination mitochondrial analysis was performed', blank=True)
+class Record(models.Model):
 
     class Meta:
-	 db_table = 'PriorGeneticTesting'
+	 db_table = 'record'
+
+
+class PriorGeneticTesting(models.Model):
+    mito_combo_analysis_loc = models.CharField(help_text='', null=True, max_length=2000, verbose_name='Lab where combination mitochondrial analysis was performed', blank=True)
+    record = models.ForeignKey(Record)
+
+    class Meta:
+	 db_table = 'priorgenetictesting'
 
 
 class Deletion(models.Model):
-    mito_combo_analysis_sample = models.IntegerField(help_text='', null=True, verbose_name='Sample type for $s mitochondrial deletion analysis (from combined analysis $d1)', blank=True, choices=[(1, 'blood'), (2, 'urine'), (3, 'muscle'), (4, 'saliva'), (5, 'other')]) # This field type is a guess
-    dc_deletion = models.CharField(help_text='', null=True, max_length=2000, verbose_name='What was the $s disease causing deletion identified on $s2 mitochondrial deletion analysis (from $s1 combined analysis)?', blank=True)
-    dc_deletion_spec = models.CharField(help_text='', null=True, max_length=2000, verbose_name='Other details for $s disease causing deletion on $s2 mitochondrial deletion analysis (from $s1 combined analysis)', blank=True)
+    mito_combo_analysis_sample = models.IntegerField(help_text='', null=True, verbose_name='Sample type for mitochondrial deletion analysis (from combined analysis $d1)', blank=True, choices=[(1, 'blood'), (2, 'urine'), (3, 'muscle'), (4, 'saliva'), (5, 'other')]) # This field type is a guess
     priorgenetictesting = models.ForeignKey(PriorGeneticTesting)
 
     class Meta:
-	 db_table = 'Deletion'
+	 db_table = 'deletion'
 
 
-class Variantofunknownsignificance(models.Model):
-    vus = models.CharField(help_text='', null=True, max_length=2000, verbose_name='$s variant of unknown significance on $s2 mitochondrial deletion analysis (from $s1 combined analysis)', blank=True)
+class Deletion2(models.Model):
+    dc_deletion = models.CharField(help_text='', null=True, max_length=2000, verbose_name='What was the disease causing deletion identified on mitochondrial deletion analysis (from combined analysis)?', blank=True)
+    dc_deletion_spec = models.CharField(help_text='', null=True, max_length=2000, verbose_name='Other details for disease causing deletion on mitochondrial deletion analysis (from combined analysis)', blank=True)
     deletion = models.ForeignKey(Deletion)
 
     class Meta:
-	 db_table = 'Variantofunknownsignificance'
+	 db_table = 'deletion2'
+
+
+class VariantOfUnknownSignificance(models.Model):
+    vus = models.CharField(help_text='', null=True, max_length=2000, verbose_name='variant of unknown significance on mitochondrial deletion analysis (from combined analysis)', blank=True)
+    deletion2 = models.ForeignKey(Deletion2)
+
+    class Meta:
+	 db_table = 'variantofunknownsignificance'
 
 
 class Panel(models.Model):
-    targeted_mito_combo_panel_type = models.CharField(help_text='', null=True, max_length=2000, verbose_name='$s panel performed (on $s1 combination analysis)?', blank=True)
-    targeted_mito_combo_panel_results = models.TextField(help_text='', null=True, verbose_name='Describe results of $s panel (on $s1 combined analysis)', blank=True) # This field type is a guess
+    targeted_mito_combo_panel_type = models.CharField(help_text='', null=True, max_length=2000, verbose_name='panel performed (on combination analysis)?', blank=True)
+    targeted_mito_combo_panel_results = models.TextField(help_text='', null=True, verbose_name='Describe results of panel (on combined analysis)', blank=True) # This field type is a guess
     priorgenetictesting = models.ForeignKey(PriorGeneticTesting)
 
     class Meta:
-	 db_table = 'Panel'
+	 db_table = 'panel'
 
 
 class Gene(models.Model):
-    gene = models.CharField(help_text='', null=True, max_length=2000, verbose_name='$s gene on panel $d2 that contained mutation (on $s1 combined analysis)', blank=True)
+    gene = models.CharField(help_text='', null=True, max_length=2000, verbose_name='gene on panel that contained mutation (on combined analysis)', blank=True)
     panel = models.ForeignKey(Panel)
 
     class Meta:
-	 db_table = 'Gene'
+	 db_table = 'gene'
 
 
-class Mdnachange(models.Model):
-    mdna_change = models.CharField(help_text='', null=True, max_length=2000, verbose_name='$s change in mDNA on $s3 gene on $s2 panel (on $s1 combined analysis)', blank=True)
-    vus_mdna = models.CharField(help_text='', null=True, max_length=2000, verbose_name='$s variant of unknown significance on $s3 gene from $s2 panel (on $s1 combined analysis)', blank=True)
+class MdnaChange(models.Model):
+    mdna_change = models.CharField(help_text='', null=True, max_length=2000, verbose_name='change in mDNA on gene on panel (on combined analysis)', blank=True)
+    gene = models.ForeignKey(Gene)
+
+    class Meta:
+	 db_table = 'mdnachange'
+
+
+class MdnaVariantOfUnknownSignificance(models.Model):
+    vus_mdna = models.CharField(help_text='', null=True, max_length=2000, verbose_name='variant of unknown significance on gene from panel (on combined analysis)', blank=True)
     panel = models.ForeignKey(Panel)
 
     class Meta:
-	 db_table = 'Mdnachange'
+	 db_table = 'mdnavariantofunknownsignificance'
 
 

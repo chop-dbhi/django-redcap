@@ -74,10 +74,10 @@ setup(
     version = version,
     name = 'django-redcap',
     author = 'Byron Ruth',
-    author_email = 'ruthb@email.chop.edu',
-    description = 'Utilities for porting REDCap projects to Django',
+    author_email = 'ruthb@email.chop.edu', 
+    description = 'Utilities for porting REDCap data dictionaries to a JSON schema and a JSON schema to Django',
     license = 'BSD',
-    keywords = 'redcap django utils',
+    keywords = 'redcap JSON django utils',
     url = 'https://github.com/cbmi/django-redcap/',
 
     packages = packages,

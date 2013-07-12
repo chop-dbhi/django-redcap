@@ -8,6 +8,7 @@ djredcap/management/__init__.py
 djredcap/management/commands/__init__.py
 djredcap/management/commands/redcap.py
 djredcap/management/subcommands/__init__.py
+djredcap/management/subcommands/djredcap.py
 djredcap/management/subcommands/inspect.py
 djredcap/tests/__init__.py
 djredcap/tests/commands.py

@@ -6,7 +6,7 @@ Utilities for porting REDCap projects to and from Django models.
 What it does
 ------------
 
-[Djredcap] (https://github.com/dmegahan/django-redcap ?djredcap?) and [djfixture] (https://github.com/cbmi/djFixture ?djfixture?) are 2 scripts that automate the process of transferring patient or survey data from Redcap to Harvest. The programs work alongside one another to create a models.py file, a fixtures.json file and a filename.json file. 
+[Djredcap] (https://github.com/dmegahan/django-redcap) and [djfixture] (https://github.com/cbmi/djFixture) are 2 scripts that automate the process of transferring patient or survey data from Redcap to Harvest. The programs work alongside one another to create a models.py file, a fixtures.json file and a filename.json file. 
 
 When djredcap is run on a data dictionary from redcap, it will iterate through each line in the file, grouping each field (a line in a data dictionary describes a field) by their form names and printing each form as a json object. The json file outputted by djredcap now contains each form, with every field grouped into a form. Djredcap then iterates through the forms in the json file and builds the model.py file by reading each fields information and constructing the models.py file form by form.
 

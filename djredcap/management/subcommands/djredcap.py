@@ -89,8 +89,15 @@ def csv2json(self, reader, fileName):
 					all_form_names.append(row['form_name']);
 					fout.write(json_str + '\n');
 					if all_repeats:
-						json_str=get_repeating_json_list(self,all_repeats,fout);
-						print_repeats(self,json_str,fout);
+						json_str,cb_json_str=get_repeating_json_list(self,all_repeats,fout);
+						#print 'json_str';
+						#print json_str;
+						#print 'cb_json';
+						#print cb_json_str
+						if json_str:
+							print_repeats(self,json_str,fout);
+						if cb_json_str:
+							print_repeats(self,cb_json_str,fout);
 					json_str = generate_json_form(self,row,new_form_name);
 					all_repeats = [];
 				elif last_form_name is None:
@@ -205,8 +212,9 @@ def create_form_relations(self, repeats_list, form_list, form_index, prev_form_i
 
 def order_list(self, repeats_list):
 	"""
-	Given a list of repeating rows created in the csv2json function, this list will pull out all
-	the embedded lists and order them in order of appearence, while keeping values in their
+	Given a list of repeating rows created in the csv2json function, 
+	this list will pull out all the embedded lists and order them 
+	in order of appearence, while keeping values in their
 	correct list, even if they were seperated by another list.
 	
 	Ex: [a[b[c d]e]f] -> [[a f][b e][c d]]
@@ -225,7 +233,9 @@ def get_repeating_json_list(self, all_repeats, fout):
 	will return a list of json forms generated from the repeating fields.
 	"""
 	json_str = '';
+	cb_json_str = '';
 	all_json = [];
+	cb_all_json = [];
 	for item in all_repeats:
 		if isinstance(item,list):
 			all_json.append(get_repeating_json_list(self,item,fout));
@@ -233,8 +243,11 @@ def get_repeating_json_list(self, all_repeats, fout):
 			if not json_str:
 				json_str = generate_json_form(self,item);
 			json_str = generate_json_field(self,item,json_str);
+			if 'checkbox' in item['field_type']:
+				cb_json_str = generate_json_checkbox(self,item);
 	all_json.append(json_str);
-	return all_json;	
+	cb_all_json.append(cb_json_str);
+	return all_json,cb_all_json;	
 	
 def print_repeats(self,json_repeating_rows,fout):
 	"""
@@ -246,7 +259,7 @@ def print_repeats(self,json_repeating_rows,fout):
 			print_repeats(self,item,fout);
 		else:
 			if item != '':
-				fout.write(item);
+				fout.write(str(item));
 				fout.write('\n');
 
 def print_list(self, someList, fout, json_str):
@@ -291,7 +304,34 @@ def check_duplicates(self, form_names_list, form_name):
 			else:
 				form_name+=str(2);
 			form_name = check_duplicates(self,form_names_list,form_name);
-	return form_name	
+	return form_name
+
+def generate_json_checkbox2(self,json_str):
+	data = json.loads(json_str);
+	
+
+
+def generate_json_checkbox(self,row):
+	json_str = generate_json_form(self,row,row['field_name']);
+	data = json.loads(str(json_str));
+	for item in row['choices']:
+		if row:
+			data['fields'].append({
+					'field name': item,
+					'field label': row['field_label'],
+					'field note': row['field_note'],
+					'field_type': row['field_type'],
+					'choices': row['choices'],
+					'validation type': row['validation_type'],
+					'min value': row['min_value'],
+					'max value': row['max_value'],
+					'identifier': row['is_identifier'],
+					'branching logic': row['branching_logic'],
+					'required': row['required'],
+					'alignment': row['custom_alignment'],
+					'question number': row['question_number'],
+				})
+	return json.dumps(data);				
 
 def generate_json_form(self,row,form_name = None):
 	if form_name:
@@ -308,7 +348,7 @@ def generate_json_field(self, row, json_str):
 	search when generating the django models.
 	"""
 	data = json.loads(str(json_str));
-	if row:		
+	if row:
 		data['fields'].append({
                                    'field name': row['field_name'],
                                    'field label': row['field_label'],
@@ -335,6 +375,7 @@ def json2dj(self, fileName):
 	
 	fout.write('\n');	
 	for line in open(fileName,'r'):
+		#print line;
 		field_num = 0;
 		data = json.loads(line);
 		form_name = data['form name'].replace('_','');

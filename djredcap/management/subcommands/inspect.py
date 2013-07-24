@@ -65,4 +65,3 @@ class Command(BaseCommand):
 			fileName = djredcap.csv2json(self,reader, fileName);
 		djredcap.json2dj(self,fileName);
 
-

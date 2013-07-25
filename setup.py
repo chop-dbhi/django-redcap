@@ -76,7 +76,7 @@ install_requires = [
 ]
 
 kwargs = {
-    'packages': find_packages(exclude=['tests','*.tests','*.tests.*','tests.*']),
+    'packages': packages,
     'include_package_data': True,
 
     'install_requires': install_requires,

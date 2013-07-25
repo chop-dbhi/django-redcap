@@ -1,6 +1,6 @@
 import os
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'tests.settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'djredcap.tests.settings'
 
 from django.core import management
 

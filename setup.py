@@ -8,6 +8,7 @@ version = __import__(BASE_PACKAGE).get_version()
 
 install_requires = [
 	'django>=1.4,<1.6',
+	'inflect',
 ]
 
 kwargs = {

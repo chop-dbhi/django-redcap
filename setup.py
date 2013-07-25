@@ -88,19 +88,19 @@ kwargs = {
     ],
 
     'version': version,
-    'name' = 'django-redcap',
-    'author' = 'Byron Ruth',
-    'author_email' = 'ruthb@email.chop.edu', 
-    'description' = 'Utilities for porting REDCap data dictionaries to a JSON schema and a JSON schema to Django',
-    'license' = 'BSD',
-    'keywords' = 'redcap JSON django utils',
-    'url' = 'https://github.com/cbmi/django-redcap/',
+    'name': 'django-redcap',
+    'author': 'Byron Ruth',
+    'author_email': 'ruthb@email.chop.edu', 
+    'description': 'Utilities for porting REDCap data dictionaries to a JSON schema and a JSON schema to Django',
+    'license': 'BSD',
+    'keywords': 'redcap JSON django utils',
+    'url': 'https://github.com/cbmi/django-redcap/',
 
-    #'cmdclass' = cmdclasses,
+    #'cmdclass': cmdclasses,
 
-    #'data_files' = data_files,
+    #'data_files': data_files,
 
-    'classifiers' = [
+    'classifiers': [
         'Development Status :: 4 - Beta',
         'Framework :: Django',
         'Intended Audience :: Developers',

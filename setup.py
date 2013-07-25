@@ -70,7 +70,22 @@ if len(sys.argv) > 1 and sys.argv[1] == 'bdist_wininst':
 
 version = __import__(BASE_PACKAGE).get_version()
 
-setup(
+install_requires = [
+	'django>=1.4,<1.6',
+]
+
+kwargs = {
+    'packages': find_packages(exclude=['tests','*.tests','*.tests.*','tests.*']),
+    'include_package_data': True,
+
+    'install_requires': install_requires,
+
+    'test_suite': 'test_suite',
+
+    'tests_require': [
+	'coverage',
+    ],
+
     version = version,
     name = 'django-redcap',
     author = 'Byron Ruth',
@@ -96,4 +111,6 @@ setup(
         'Programming Language :: Python',
         'Topic :: Internet :: WWW/HTTP',
     ],
-)
+}
+
+setup(**kwargs)

@@ -7,14 +7,9 @@ DATABASES = {
     }
 }
 
-ROOT_URLCONF = '';
-
 INSTALLED_APPS = (
-    #'django.contrib.sites',
-    #'django.contrib.auth',
-    #'django.contrib.contenttypes',
-
     'djredcap',
+    'tests',
 )
 
-SITE_ID = 1;
+SECRET_KEY = 'xSECRETx'

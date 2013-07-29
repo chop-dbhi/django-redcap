@@ -336,7 +336,7 @@ def generate_json_form(self,row,form_name = None):
         fname = row['form_name'];
     return (json.dumps({'form name': fname,
                 'section header': row['section_name'],
-                'fields': []},indent=0,separators=(',',': ')));
+                'fields': []}));
 
 def generate_json_field(self, row, json_str):
     """

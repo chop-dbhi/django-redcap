@@ -72,8 +72,8 @@ def csv2json(self, reader, fileName):
     recordDict['section_name'] = 'Record';
     all_form_names.append(recordDict['form_name']);
     json_str = generate_json_form(self,recordDict);
-    fout.write(json_str + '\n');
-        
+    fout.write(json_str);
+    fout.write('\n');
     json_str = '';
 
     for row in reader:

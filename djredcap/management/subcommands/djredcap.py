@@ -328,12 +328,13 @@ def generate_json_checkbox(self,row):
                 })
     return json.dumps(data);                
 
+
 def generate_json_form(self,row,form_name = None):
     if form_name:
         fname = form_name;
     else:
         fname = row['form_name'];
-    return (json.dumps({    'form name': fname,
+    return (json.dumps({'form name': fname,
                 'section header': row['section_name'],
                 'fields': []},indent=0,separators=(',',': ')));
 

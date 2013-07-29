@@ -89,15 +89,15 @@ def csv2json(self, reader, fileName):
 					all_form_names.append(row['form_name']);
 					fout.write(json_str + '\n');
 					if all_repeats:
-						json_str,cb_json_str=get_repeating_json_list(self,all_repeats,fout);
+						json_str=get_repeating_json_list(self,all_repeats,fout);
 						#print 'json_str';
 						#print json_str;
 						#print 'cb_json';
 						#print cb_json_str
 						if json_str:
 							print_repeats(self,json_str,fout);
-						if cb_json_str:
-							print_repeats(self,cb_json_str,fout);
+						#if cb_json_str:
+							#print_repeats(self,cb_json_str,fout);
 					json_str = generate_json_form(self,row,new_form_name);
 					all_repeats = [];
 				elif last_form_name is None:
@@ -243,11 +243,11 @@ def get_repeating_json_list(self, all_repeats, fout):
 			if not json_str:
 				json_str = generate_json_form(self,item);
 			json_str = generate_json_field(self,item,json_str);
-			if 'checkbox' in item['field_type']:
-				cb_json_str = generate_json_checkbox(self,item);
+			#if 'checkbox' in item['field_type']:
+				#cb_json_str = generate_json_checkbox(self,item);
 	all_json.append(json_str);
-	cb_all_json.append(cb_json_str);
-	return all_json,cb_all_json;	
+	#cb_all_json.append(cb_json_str);
+	return all_json #,cb_all_json;	
 	
 def print_repeats(self,json_repeating_rows,fout):
 	"""
@@ -305,11 +305,6 @@ def check_duplicates(self, form_names_list, form_name):
 				form_name+=str(2);
 			form_name = check_duplicates(self,form_names_list,form_name);
 	return form_name
-
-def generate_json_checkbox2(self,json_str):
-	data = json.loads(json_str);
-	
-
 
 def generate_json_checkbox(self,row):
 	json_str = generate_json_form(self,row,row['field_name']);

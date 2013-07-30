@@ -7,7 +7,7 @@ from django.utils.importlib import import_module
 class Command(BaseCommand):
     help = "A wrapper for REDCap subcommands"
 
-    commands = ['inspect','json','models']
+    commands = ['inspect','json','models','fixture']
 
     def print_subcommands(self, prog_name):
         usage = ['', 'Available subcommands:']

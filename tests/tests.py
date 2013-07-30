@@ -6,9 +6,47 @@ from django.core.management import call_command
 from itertools import izip
 from itertools import izip_longest
 
-__all__ = ('RedcapTestCase',)
+__all__ = ('RedcapTestCase','FixtureTestCase',)
 def get_filename(filename):
 	return os.path.join(os.path.dirname(__file__), 'fixtures', filename)
+
+
+def split_assert(self, line1, line2):
+    data1 = line1.rstrip('\n').replace(" ","").replace(",","").split(':')
+    data2 = line2.rstrip('\n').replace(" ","").replace(",","").split(':') 
+    
+    try:
+        self.assertEqual(line1, line2)
+    except AssertionError:
+        self.assertEqual(data1[0], data2[0])
+        try:
+            self.assertAlmostEqual(float(data1[1]), float(data2[1]))
+        except IndexError:
+            pass
+
+class FixtureTestCase(TestCase):
+    def test_csv_with_repeating_fields(self):
+        file_name = 'fixture_with_rep_fields'
+        csv_file_name1 = file_name + '.csv'
+        csv_file_name2 = file_name + '.json'
+        cmp_file_name = 'cmp_' + file_name + '.json'
+        call_command('redcap','fixture',get_filename(csv_file_name1),
+                    get_filename(csv_file_name2),'mysite')
+        cmp_file = open(get_file_name(cmp_file_name))
+        for line1, line2 in izip(open(get_filename('fixtures.json'),'r'),
+                                    open(get_filename(cmp_file_name),'r')):
+            split_assert(self, line1, line2)
+
+    def test_csv_without_repeating_fields(self):
+        file_name = 'fixture_without_rep_fields'
+        csv_file_name1 = file_name + '.csv'
+        csv_file_name2 = file_name + '.json'
+        call_command('redcap','fixture',get_filename(csv_file_name1),              
+                                    get_filename(csv_file_name2),'mysite')
+        cmp_file = open(get_filename(cmp_file_name))
+        for line1, line2 in izip(open(get_filename('fixtures.json'),'r'),
+                                    open(get_filename(cmp_file_name),'r')):
+            split_assert(self,line1,line2)
 
 class RedcapTestCase(TestCase):
 	def test_multi_form_csv_with_repeating_fields(self):

@@ -32,7 +32,7 @@ class FixtureTestCase(TestCase):
         cmp_file_name = 'cmp_' + file_name + '.json'
         call_command('redcap','fixture',get_filename(csv_file_name1),
                     get_filename(csv_file_name2),'mysite')
-        cmp_file = open(get_file_name(cmp_file_name))
+        cmp_file = open(get_filename(cmp_file_name))
         for line1, line2 in izip(open(get_filename('fixtures.json'),'r'),
                                     open(get_filename(cmp_file_name),'r')):
             split_assert(self, line1, line2)
@@ -41,6 +41,7 @@ class FixtureTestCase(TestCase):
         file_name = 'fixture_without_rep_fields'
         csv_file_name1 = file_name + '.csv'
         csv_file_name2 = file_name + '.json'
+        cmp_file_name = 'cmp_' + file_name + '.json'
         call_command('redcap','fixture',get_filename(csv_file_name1),              
                                     get_filename(csv_file_name2),'mysite')
         cmp_file = open(get_filename(cmp_file_name))

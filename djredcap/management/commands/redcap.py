@@ -7,7 +7,7 @@ class Command(BaseCommand):
     help = "A wrapper for REDCap subcommands"
 
     subcommands = {'inspect': 'inspect',
-                'json': 'rjson',
+                'rjson': 'json',
                 'models': 'models',
                 'fixture': 'fixture'
                 }
@@ -24,7 +24,6 @@ class Command(BaseCommand):
         if self.help:
             return '{0}\n\n{1}'.format(usage, self.help)
         return usage
-
 
     def print_help(self, prog_name, subcommand):
         super(Command, self).print_help(prog_name, subcommand)

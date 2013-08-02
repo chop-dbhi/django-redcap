@@ -36,6 +36,8 @@ class ConvertTestCase(TestCase):
         cmp_file = open(get_filename(cmp_fileName))
         for line1, line2 in izip(open(get_filename('models.py'),'r'),open(get_filename(cmp_fileName),'r')):
             self.assertEqual(line1,line2)   
+        shutil.copy(get_filename(json_fileName + '2'),get_filename(json_fileName))
+
 
     def test_single_form_csv_with_rep_fields_start_with_repeat(self):
         fileName = 'single_form_with_rep_fields_start_with_repeat'

@@ -9,7 +9,8 @@ class Command(BaseCommand):
     subcommands = {'inspect': 'inspect',
                 'rjson': 'json',
                 'models': 'models',
-                'fixture': 'fixture'
+                'fixture': 'fixture',
+                'convert': 'convert'
                 }
 
     def print_subcommands(self, prog_name):

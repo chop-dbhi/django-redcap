@@ -7,6 +7,7 @@ import keyword
 import sys
 import re
 import inflect
+from optparse import make_option
 import djredcap
 from django.core.management.base import BaseCommand, CommandError
     
@@ -35,10 +36,18 @@ class Command(BaseCommand):
     db_module = 'django.db'
     args = 'filename';
 
+    jsonFilename = '';
+
+    option_list = BaseCommand.option_list + (
+            make_option('--JSON', action='store',dest='json',
+                help='Print a JSON file when using convert, default no'),
+    )
+
     def handle(self, fileName=None, *args, **options):
         if not fileName:
             raise CommandError('Enter a filename');
     
+        jsonFilename = options.get('json')
         fin = open(fileName);
         dialect = csv.Sniffer().sniff(fin.read(1024));
         fin.seek(0);
@@ -50,4 +59,7 @@ class Command(BaseCommand):
         fileName1 = fileName;
         djredcap.json2dj(self,fileName);
         #os.remove(fileName1);
-        os.remove(os.path.join(os.path.dirname(fileName1), fileName1));
+        if jsonFilename:
+            os.rename(fileName1, jsonFilename)
+        else:
+            os.remove(os.path.join(os.path.dirname(fileName1), fileName1))

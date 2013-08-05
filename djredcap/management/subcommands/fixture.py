@@ -9,7 +9,7 @@ import math
 import djfixture
 from django.core.management.base import BaseCommand, CommandError
 
-projectName = ''
+__project_name__ = ''
 
 
 class Command(BaseCommand):
@@ -17,16 +17,19 @@ class Command(BaseCommand):
     db_module = 'django.db'
     args = 'file', 'jsonfile'
 
-    def handle(self, file=None, jsonFile=None, appName=None, *args, **options):
+    def handle(self, file=None, json_file=None, app_name=None,
+               *args, **options):
+        help = """Generates a fixture.json file from a redcap data csv and a
+        matching JSON file."""
         if not file:
             raise CommandError('Enter a valid CSV file')
-        if not jsonFile:
+        if not json_file:
             raise CommandError('Enter a valid JSON file')
-        if not appName:
+        if not app_name:
             raise CommandError('Enter the name of your django project')
 
-        global projectName
-        projectName = appName
+        global __project_name__
+        __project_name__ = app_name
         fin = open(file)
         header_keys = fin.readline().split(',')
         dialect = csv.Sniffer().sniff(fin.read(1024))
@@ -34,4 +37,5 @@ class Command(BaseCommand):
         reader.next()
 
         fout = open(os.path.join(os.path.dirname(file), 'fixtures.json'), 'w+')
-        djfixture.csv_2_fixture(self, fin, reader, jsonFile, projectName, fout)
+        djfixture.csv_2_fixture(self, fin, reader, json_file, __project_name__,
+                                fout)

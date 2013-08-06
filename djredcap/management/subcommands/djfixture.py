@@ -24,16 +24,16 @@ field_types = {
     'truefalse': 'BooleanField',
 }
 
-projectName = ''
+__project_name__ = ''
 
 requires_model_validation = False
 db_module = 'django.db'
 args = 'file', 'jsonfile'
 
 
-def csv_2_fixture(self, file, reader, jsonModels, pName, fout):
-    global projectName
-    projectName = pName
+def csv_2_fixture(self, file, reader, json_models, p_name, fout):
+    global __project_name__
+    __project_name__ = p_name
 
     base_form_name = ''
     new_form_name = ''
@@ -45,27 +45,27 @@ def csv_2_fixture(self, file, reader, jsonModels, pName, fout):
     reader.next()
     pk_num = 0
 
-    for form in open(jsonModels, 'r'):
+    for form in open(json_models, 'r'):
         form = json.loads(form)
         form_name = form['form name']
         file.seek(0)
         reader.next()
 
         pk_num = 0
-        numRepeats = ''
+        num_repeats = ''
         primary_key_counter = 0
         if form_name.find('~') != -1:
             form_name, fk_name = form['form name'].split('~')
             form_dict[form_name] = fk_name
-            numRepeats = form_name.split(' ')[1]
+            num_repeats = form_name.split(' ')[1]
         else:
             base_form_name = form['form name']
             form_dict = {}
         for line in reader:
             pk_num += 1
-            fixtureDict = {}
-            if numRepeats:
-                if numRepeats.isdigit() is False:
+            fixture_dict = {}
+            if num_repeats:
+                if num_repeats.isdigit() is False:
                     """
                     Handles special case where the number of repeats depends
                     on another field, usually labeled as formName
@@ -76,7 +76,7 @@ def csv_2_fixture(self, file, reader, jsonModels, pName, fout):
                     might pop up in find_related_forms if it is not changed to
                     a number.
                     """
-                    new_num_repeats = line[numRepeats.replace('[', '')
+                    new_num_repeats = line[num_repeats.replace('[', '')
                                            .replace(']', '')]
                     if not new_num_repeats:
                         new_num_repeats = 0
@@ -136,15 +136,15 @@ def csv_2_fixture(self, file, reader, jsonModels, pName, fout):
                                 pass
 
                         if checked_line:
-                            fixtureDict[field['field name']] = [field,
-                                                                checked_line]
+                            fixture_dict[field['field name']] = [field,
+                                                                 checked_line]
                         elif answered is True:
-                            fixtureDict[field['field name']] = [field, '0']
+                            fixture_dict[field['field name']] = [field, '0']
                         else:
-                            fixtureDict[field['field name']] = [field, '']
+                            fixture_dict[field['field name']] = [field, '']
                     else:
                         try:
-                            fixtureDict[field['field name']] = [
+                            fixture_dict[field['field name']] = [
                                 field,
                                 line[field['field name']]
                                 ]
@@ -152,7 +152,7 @@ def csv_2_fixture(self, file, reader, jsonModels, pName, fout):
                             #print 'ERROR: NOT FOUND '+field['field name']
                             #print field
                             pass
-                fixtures.append([form_name, fixtureDict])
+                fixtures.append([form_name, fixture_dict])
     print_fixtures(self, fixtures, pk_num_list, fout)
 
 
@@ -179,17 +179,17 @@ def generate_repeating_fixtures(self, line, form,
 
     for i in range(num_repeats_all):
         primary_key_counter += 1
-        fixtureDict = {}
+        fixture_dict = {}
         form_num_list = []
         fk_index = len(form_list)-2
         foreign_key = form_list[fk_index].lower().split(' ')[0].replace('_',
                                                                         '')
         if fk_index == 0:
-            fixtureDict[foreign_key] = ['', pk_num]
+            fixture_dict[foreign_key] = ['', pk_num]
         else:
             fk_num = int(math.ceil(primary_key_counter /
                                    float(num_repeats_list[0])))
-            fixtureDict[foreign_key] = ['', fk_num]
+            fixture_dict[foreign_key] = ['', fk_num]
         pk_num_list.append(primary_key_counter)
         for field in form['fields']:
             clean_field_name = re.sub('\${d\}', '', field['field name'])
@@ -225,22 +225,22 @@ def generate_repeating_fixtures(self, line, form,
                         pass
                 #if the line is checked, the number of the option is the answer
                 if checked_line:
-                    fixtureDict[clean_field_name] = [field, checked_line]
+                    fixture_dict[clean_field_name] = [field, checked_line]
                 elif answered is True:
-                    fixtureDict[clean_field_name] = [field, '0']
+                    fixture_dict[clean_field_name] = [field, '0']
                 else:
-                    fixtureDict[clean_field_name] = [field, '']
+                    fixture_dict[clean_field_name] = [field, '']
             else:
                 try:
-                    fixtureDict[clean_field_name] = [field,
-                                                     line[base_field_name]]
+                    fixture_dict[clean_field_name] = [field,
+                                                      line[base_field_name]]
                 except KeyError:
                     #print 'ERROR: NOT FOUND ' + base_field_name
                     #print field
                     #print base_field_name
                     pass
         clean_form_name = form['form name'].split(' ')[0].replace('$', '')
-        fixtures.append([clean_form_name, fixtureDict])
+        fixtures.append([clean_form_name, fixture_dict])
 
         cur_ind = len(current_repeat_list) - 1
         update_current_repeats(self, num_repeats_list[::-1],
@@ -306,8 +306,8 @@ def get_field_names(self, field, form_dict, field_name=None):
     """
     choices_field_names = []
     if field['field type'] == 'checkbox' or \
-        field['field type'] == 'checkbox_other' or \
-        field['field type'] == 'checkbox_details':
+       field['field type'] == 'checkbox_other' or \
+       field['field type'] == 'checkbox_details':
 
         choices = field['choices'].split('|')
         for choice in choices:
@@ -346,37 +346,38 @@ def update_current_repeats(self, form_list, current_repeats_list, cur_index):
         current_repeats_list[cur_index] += 1
 
 
-def print_fixtures(self, fixturesList, pkList, fout):
+def print_fixtures(self, fixtures_list, pk_list, fout):
     """
-    fixturesList is a list of lists. Each element is a list of
-    [form name,fixtureDict]. Each element in fixtureDict is [field, field_val]
+    fixtures_list is a list of lists. Each element is a list of
+    [form name,fixture_dict]. Each element in fixture_dict
+    is [field, field_val]
 
-    function loops through each element in fixturesList, then each
-    key(element) in fixturesList[i][1](a fixtureDict) and determines if its
-    fields are blank. If they are not blank, the field is added to fieldDict.
+    function loops through each element in fixtures_list, then each
+    key(element) in fixtures_list[i][1](a fixture_dict) and determines if its
+    fields are blank. If they are not blank, the field is added to field_dict.
 
-    fieldDict is then printed all fields in each fixtureDict has been checked
+    field_dict is then printed all fields in each fixture_dict has been checked
     """
-    allJson = []
-    firstFix = True
-    for i in range(len(fixturesList)):
-        fieldDict = {}
+    all_json = []
+    first_fix = True
+    for i in range(len(fixtures_list)):
+        field_dict = {}
         #if field has a value, print it
-        for key in fixturesList[i][1]:
-            if fixturesList[i][1][key]:
-                field = fixturesList[i][1][key][0]
-                field_val = fixturesList[i][1][key][1]
+        for key in fixtures_list[i][1]:
+            if fixtures_list[i][1][key]:
+                field = fixtures_list[i][1][key][0]
+                field_val = fixtures_list[i][1][key][1]
                 if field:
-                    fieldDict[key] = cast_field(self, field, field_val)
+                    field_dict[key] = cast_field(self, field, field_val)
                 else:
                     #if it is just a foreign key
-                    fieldDict[key] = field_val
-        allJson.append({'model': projectName + '.' +
-                        fixturesList[i][0].replace('_', '') + '',
-                        'pk': pkList[i],
-                        'fields': fieldDict
-                        })
-    fout.write(json.dumps(allJson, indent=4, separators=(',', ': ')))
+                    field_dict[key] = field_val
+        all_json.append({'model': __project_name__ + '.' +
+                        fixtures_list[i][0].replace('_', '') + '',
+                        'pk': pk_list[i],
+                        'fields': field_dict
+                         })
+    fout.write(json.dumps(all_json, indent=4, separators=(',', ': ')))
 
 
 def get_field_type(self, field):
@@ -424,7 +425,7 @@ def cast_field(self, field, field_val):
         try:
             return float(field_val)
         except:
-            pass;
+            pass
     elif field_type == 'NullBooleanField':
         if field_val == '':
             return None

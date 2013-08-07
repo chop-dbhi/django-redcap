@@ -59,9 +59,9 @@ class Command(BaseCommand):
 
         reader.next()
 
-        file_name = djredcap.csv2json(self, reader, file_name)
+        file_name = djredcap.csv_2_json(self, reader, file_name)
         file_name1 = file_name
-        djredcap.json2dj(self, file_name)
+        djredcap.json_2_dj(self, file_name)
         if json_filename:
             os.rename(file_name1, json_filename)
         else:

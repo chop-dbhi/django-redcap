@@ -64,5 +64,5 @@ class Command(BaseCommand):
 
         reader.next()
         if fileName.find('.json') == -1:
-            fileName = djredcap.csv2json(self, reader, fileName)
-        djredcap.json2dj(self, fileName)
+            fileName = djredcap.csv_2_json(self, reader, fileName)
+        djredcap.json_2_dj(self, fileName)

@@ -45,4 +45,4 @@ class Command(BaseCommand):
         reader = csv.DictReader(fin, fieldnames=header_keys, dialect=dialect)
 
         reader.next()
-        fileName = djredcap.json2dj(self, file_name)
+        fileName = djredcap.json_2_dj(self, file_name)

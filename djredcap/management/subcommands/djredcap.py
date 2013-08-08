@@ -88,17 +88,14 @@ def csv_2_json(self, reader, file_name):
                 if last_form_name:
                     row['form_name']=check_duplicates(self, all_form_names, row['form_name'])
                     all_form_names.append(row['form_name'])
+
+                    #Where forms/fields are printed
                     fout.write(json_str + '\n')
+                    print_checkboxes(self, json_str, fout)
                     if all_repeats:
                         json_str=get_repeating_json_list(self, all_repeats, fout)
-                        #print 'json_str'
-                        #print json_str
-                        #print 'cb_json'
-                        #print cb_json_str
                         if json_str:
                             print_repeats(self, json_str, fout)
-                        #if cb_json_str:
-                            #print_repeats(self, cb_json_str, fout)
                     json_str = generate_json_form(self, row, new_form_name)
                     all_repeats = []
                 elif last_form_name is None:
@@ -172,7 +169,10 @@ def csv_2_json(self, reader, file_name):
             form_list = ['']
             repeating_rows = []
         
+    #prints the last line in the csv    
     fout.write(json_str + '\n')
+    print_checkboxes(self, json_str, fout)
+    #prints last repeating lines in the csv
     if row['form_name'] != last_form_name:
         if last_form_name:
             json_str = generate_json_form(self, row)
@@ -247,11 +247,8 @@ def get_repeating_json_list(self, all_repeats, fout):
             if not json_str:
                 json_str = generate_json_form(self, item)
             json_str = generate_json_field(self, item, json_str)
-            #if 'checkbox' in item['field_type']:
-                #cb_json_str = generate_json_checkbox(self, item)
     all_json.append(json_str)
-    #cb_all_json.append(cb_json_str)
-    return all_json #, cb_all_json  
+    return all_json
 
 
 def print_repeats(self, json_repeating_rows, fout):
@@ -266,6 +263,8 @@ def print_repeats(self, json_repeating_rows, fout):
             if item != '':
                 fout.write(str(item))
                 fout.write('\n')
+                print_checkboxes(self, item, fout)
+
 
 
 def print_list(self, someList, fout, json_str):
@@ -315,26 +314,50 @@ def check_duplicates(self, form_names_list, form_name):
     return form_name
 
 
-def generate_json_checkbox(self, row):
-    json_str = generate_json_form(self, row, row['field_name'])
+def print_checkboxes(self, json_str, fout):
+    cb_json_list = find_checkbox(self, json_str)
+    for item in cb_json_list:
+        fout.write(item + '\n')
+
+
+def find_checkbox(self, json_str):
+    cb_field_list = []
     data = json.loads(str(json_str))
-    for item in row['choices']:
-        if row:
-            data['fields'].append({
-                    'field name': item,
-                    'field label': row['field_label'],
-                    'field note': row['field_note'],
-                    'field_type': row['field_type'],
-                    'choices': row['choices'],
-                    'validation type': row['validation_type'],
-                    'min value': row['min_value'],
-                    'max value': row['max_value'],
-                    'identifier': row['is_identifier'],
-                    'branching logic': row['branching_logic'],
-                    'required': row['required'],
-                    'alignment': row['custom_alignment'],
-                    'question number': row['question_number'],
-                })
+    for item in data['fields']:
+        if 'checkbox' in item['field type']:
+            cb_field_list.append(item)
+    cb_json_list = []
+    for item in cb_field_list:
+        cb_json = generate_json_checkbox(self, item)
+        cb_json_list.append(cb_json)
+    return cb_json_list
+
+
+def generate_json_checkbox(self, json_str):
+    form = json.dumps({'form name': json_str['field name'],
+            'fields': []})
+    data = json.loads(str(form))
+    data['fields'].append({
+            'field name': 'label',
+            'field label': json_str['field label'],
+            'field note': json_str['field note'],
+            'field type': 'text',
+            'choices': [],
+            'validation type': json_str['validation type'],
+            'min value': json_str['min value'],
+            'max value': json_str['max value'],
+            'branching logic': json_str['branching logic'],
+            'required': json_str['required'],
+    })
+    data['fields'].append({                                                     
+            'field name': 'value',                                              
+            'field label': json_str['field label'],
+            'field note': json_str['field note'],
+            'field type': 'integer',
+            'choices': json_str['choices'],
+            'validation type': json_str['validation type'],
+            'required': json_str['required'],
+    })
     return json.dumps(data)                
 
 
@@ -354,7 +377,7 @@ def generate_json_field(self, row, json_str):
     search when generating the django models.
     """
     data = json.loads(str(json_str))
-    if row:
+    if row:           
         data['fields'].append({
                                    'field name': row['field_name'],
                                    'field label': row['field_label'],

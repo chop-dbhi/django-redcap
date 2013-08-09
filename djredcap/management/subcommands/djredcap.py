@@ -334,7 +334,8 @@ def find_checkbox(self, json_str):
 
 
 def generate_json_checkbox(self, json_str, form_name):
-    form = json.dumps({'form name': json_str['field name'] + '~' + form_name.split('~')[0],
+    #add foreign key name to form name like a normal model would have
+    form = json.dumps({'form name': json_str['field name'] + '~' + form_name.split('~')[0].split(' ')[0],
             'fields': []})
     data = json.loads(str(form))
     data['fields'].append({

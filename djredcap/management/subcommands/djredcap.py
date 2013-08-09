@@ -328,13 +328,13 @@ def find_checkbox(self, json_str):
             cb_field_list.append(item)
     cb_json_list = []
     for item in cb_field_list:
-        cb_json = generate_json_checkbox(self, item)
+        cb_json = generate_json_checkbox(self, item, data['form name'])
         cb_json_list.append(cb_json)
     return cb_json_list
 
 
-def generate_json_checkbox(self, json_str):
-    form = json.dumps({'form name': json_str['field name'],
+def generate_json_checkbox(self, json_str, form_name):
+    form = json.dumps({'form name': json_str['field name'] + '~' + form_name.split('~')[0],
             'fields': []})
     data = json.loads(str(form))
     data['fields'].append({

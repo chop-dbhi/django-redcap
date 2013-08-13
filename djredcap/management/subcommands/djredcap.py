@@ -352,7 +352,9 @@ def create_checkboxes(self, checkbox_fields, form_name):
 
 def generate_json_checkbox(self, json_str, form_name):
     #add foreign key name to form name like a normal model would have
-    form = json.dumps({'form name': json_str['field name'] + ' 1~' + form_name.split('~')[0],
+    field_name = json_str['field name']
+    field_name = re.sub('\${d\}', '', field_name)
+    form = json.dumps({'form name': field_name + ' 1~' + form_name.split('~')[0],
             'fields': []})
     data = json.loads(str(form))
     data['fields'].append({

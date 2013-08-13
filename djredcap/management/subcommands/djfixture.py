@@ -190,7 +190,6 @@ def generate_repeating_fixtures(self, line, form,
             fk_num = int(math.ceil(primary_key_counter /
                                    float(num_repeats_list[0])))
             fixture_dict[foreign_key] = ['', fk_num]
-        print additional_forms
         pk_num_list.append(primary_key_counter+additional_forms)
         
         checkboxform = False
@@ -203,6 +202,7 @@ def generate_repeating_fixtures(self, line, form,
         if checkboxform:
             #clean_field_name = re.sub('\${d\}', '', form['form name'])
             cb_field_name = form['form name'].split('~')[0].split(' ')[0]
+            cb_field_name = re.sub('\${d\}', '', cb_field_name)
             if len(form_list[2:]) == 0:
                 base_field_name = cb_field_name
             else:
@@ -226,7 +226,14 @@ def generate_repeating_fixtures(self, line, form,
             checked_fixtures = []
             for checked_line in checked_lines:
                 choices = form['fields'][1]['choices']
-                choice = choices.split('|')[int(checked_line)]
+                choice = choices.split('|')
+                """
+                The number assigned to each choice by redcap might not start
+                at 1. This subtracts the starting num from the index so
+                an out of bounds error doesn't occur
+                """
+                starts_at = choice[0].split(',')[0]
+                choice = choice[int(checked_line)-int(starts_at)]
                 choice = choice.split(',')
                 fixture_dict['label'] = [form['fields'][0], choice[1]]
                 fixture_dict['value'] = [form['fields'][1], choice[0].strip(' ')]
@@ -300,7 +307,15 @@ def generate_repeating_fixtures(self, line, form,
                     choices_str = ''
                     for checked_line in checked_lines:
                         choices = field['field note']
-                        choice = choices.split('|')[int(checked_line)]
+                        choice = choices.split('|')
+                        """
+                        The number assigned to each choice might not start
+                        at 1. This subtracts the starting num from the index
+                        we check
+                        """
+                        starts_at = choice[0].split(',')[0]
+                        choice = choice[int(checked_line)-int(starts_at)]
+                        
                         choices_str = choices_str + ' ' + choice
                     fixture_dict[clean_field_name] = [field, choices_str]
                 else:

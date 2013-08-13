@@ -90,8 +90,7 @@ def csv_2_json(self, reader, file_name):
                     all_form_names.append(row['form_name'])
 
                     #Where forms/fields are printed
-                    fout.write(json_str + '\n')
-                    print_checkboxes(self, json_str, fout)
+                    print_json_str(self, json_str, fout)
                     if all_repeats:
                         json_str=get_repeating_json_list(self, all_repeats, fout)
                         if json_str:
@@ -170,8 +169,7 @@ def csv_2_json(self, reader, file_name):
             repeating_rows = []
         
     #prints the last line in the csv    
-    fout.write(json_str + '\n')
-    print_checkboxes(self, json_str, fout)
+    print_json_str(self, json_str, fout)
     #prints last repeating lines in the csv
     if row['form_name'] != last_form_name:
         if last_form_name:
@@ -261,10 +259,7 @@ def print_repeats(self, json_repeating_rows, fout):
             print_repeats(self, item, fout)
         else:
             if item != '':
-                fout.write(str(item))
-                fout.write('\n')
-                print_checkboxes(self, item, fout)
-
+                print_json_str(self, item, fout)
 
 
 def print_list(self, someList, fout, json_str):
@@ -276,6 +271,13 @@ def print_list(self, someList, fout, json_str):
             print_list(self, item, fout, json_str)
         else:   
             json_str = generate_json_field(self, item, json_str)
+
+
+def print_json_str(self, json_str, fout):
+    json_str, cb_field_list, form_name = pop_checkbox(self, json_str)
+    fout.write(str(json_str))
+    fout.write('\n')
+    print_checkboxes(self, cb_field_list, form_name, fout)
 
 
 def last_inner_append(self, x, y, cur_depth, target_depth):
@@ -314,28 +316,43 @@ def check_duplicates(self, form_names_list, form_name):
     return form_name
 
 
-def print_checkboxes(self, json_str, fout):
-    cb_json_list = find_checkbox(self, json_str)
+def print_checkboxes(self, checkbox_fields, form_name,  fout):
+    cb_json_list = create_checkboxes(self, checkbox_fields, form_name)
     for item in cb_json_list:
         fout.write(item + '\n')
 
 
-def find_checkbox(self, json_str):
+def create_summary(self, field):
+    newField = dict(field)
+    newField['field name'] = newField['field name']+'_summary'
+    newField['field type'] = 'text'
+    newField['field note'] = newField['choices'] 
+    newField['choices'] = []
+    return newField
+
+
+def pop_checkbox(self, json_str):
     cb_field_list = []
     data = json.loads(str(json_str))
-    for item in data['fields']:
+    for i, item in enumerate(data['fields']):
         if 'checkbox' in item['field type']:
             cb_field_list.append(item)
+            data['fields'].pop(i);
+            data['fields'].append(create_summary(self, item))
+    return json.dumps(data), cb_field_list, data['form name']
+
+
+def create_checkboxes(self, checkbox_fields, form_name):
     cb_json_list = []
-    for item in cb_field_list:
-        cb_json = generate_json_checkbox(self, item, data['form name'])
+    for item in checkbox_fields:
+        cb_json = generate_json_checkbox(self, item, form_name)
         cb_json_list.append(cb_json)
     return cb_json_list
 
 
 def generate_json_checkbox(self, json_str, form_name):
     #add foreign key name to form name like a normal model would have
-    form = json.dumps({'form name': json_str['field name'] + '~' + form_name.split('~')[0].split(' ')[0],
+    form = json.dumps({'form name': json_str['field name'] + ' 1~' + form_name.split('~')[0],
             'fields': []})
     data = json.loads(str(form))
     data['fields'].append({
@@ -354,7 +371,7 @@ def generate_json_checkbox(self, json_str, form_name):
             'field name': 'value',                                              
             'field label': json_str['field label'],
             'field note': json_str['field note'],
-            'field type': 'integer',
+            'field type': json_str['field type'],
             'choices': json_str['choices'],
             'validation type': json_str['validation type'],
             'required': json_str['required'],

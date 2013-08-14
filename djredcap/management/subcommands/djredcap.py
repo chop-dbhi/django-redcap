@@ -601,5 +601,5 @@ def form_2_model(self, form_name):
     """
     Removes puncuation from form_name
     """
-    form_name = form_name.replace('-', '').replace('/', '').replace('(', '').replace(')', '')
+    form_name = re.sub('[-/\(\)]', '', form_name)
     return form_name.title().replace(' ', '')

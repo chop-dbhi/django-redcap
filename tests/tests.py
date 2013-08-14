@@ -153,7 +153,7 @@ class ModelsTestCase(TestCase):
         csv_fileName = fileName + '.json'
         cmp_fileName = 'cmp_' + fileName + '.py'
         call_command('redcap','models',get_filename(csv_fileName))
-        cmp_file = open(get_filename('cmp_' + fileName + '.py'))
+        cmp_file = open(get_filename(cmp_fileName))
         for line1, line2 in izip(open(get_filename('models.py'),'r'),open(get_filename(cmp_fileName),'r')):
             self.assertEqual(line1,line2)
 

@@ -54,6 +54,7 @@ def csv_2_fixture(self, file, reader, json_models, p_name, fout):
         pk_num = 0
         num_repeats = ''
         primary_key_counter = 0
+        additional_forms = 0
         if form_name.find('~') != -1:
             form_name, fk_name = form['form name'].split('~')
             form_dict[form_name] = fk_name
@@ -98,11 +99,10 @@ def csv_2_fixture(self, file, reader, json_models, p_name, fout):
                 full_form_list.append(base_form_name)
                 full_form_list = full_form_list[::-1]
 
-                primary_key_counter = generate_repeating_fixtures(
-                    self, line, form, full_form_list,
-                    fixtures, pk_num, pk_num_list,
-                    primary_key_counter
-                    )
+                primary_key_counter, additional_forms = generate_repeating_fixtures(
+                                                self, line, form, full_form_list,
+                                                fixtures, pk_num, pk_num_list,
+                                                primary_key_counter, additional_forms)
             else:
                 #code for generating a fixture without foreign keys
                 #not used currently with the addition of record form
@@ -134,7 +134,6 @@ def csv_2_fixture(self, file, reader, json_models, p_name, fout):
                                                             #print field
                                                             #print field_names
                                 pass
-
                         if checked_line:
                             fixture_dict[field['field name']] = [field,
                                                                  checked_line]
@@ -158,7 +157,8 @@ def csv_2_fixture(self, file, reader, json_models, p_name, fout):
 
 def generate_repeating_fixtures(self, line, form,
                                 form_list, fixtures, pk_num,
-                                pk_num_list, primary_key_counter):
+                                pk_num_list, primary_key_counter, 
+                                additional_forms):
     """
     This function generates the fixture dictionaries for a repeating form.
     """
@@ -190,71 +190,162 @@ def generate_repeating_fixtures(self, line, form,
             fk_num = int(math.ceil(primary_key_counter /
                                    float(num_repeats_list[0])))
             fixture_dict[foreign_key] = ['', fk_num]
-        pk_num_list.append(primary_key_counter)
-        for field in form['fields']:
-            clean_field_name = re.sub('\${d\}', '', field['field name'])
-            #form_list[0] and form_list[1] are both 'base forms'
-            #form_list[0] is record, form_list[1] is the form name given for
-            #each field without repeating
+        pk_num_list.append(primary_key_counter+additional_forms)
+        
+        checkboxform = False
+        try:
+            if form['fields'][0]['field name'] == 'label' and form['fields'][1]['field name'] == 'value':
+                checkboxform = True
+        except IndexError:
+            pass;
+
+        if checkboxform:
+            #clean_field_name = re.sub('\${d\}', '', form['form name'])
+            cb_field_name = form['form name'].split('~')[0].split(' ')[0]
+            cb_field_name = re.sub('\${d\}', '', cb_field_name)
             if len(form_list[2:]) == 0:
-                base_field_name = field['field name']
+                base_field_name = cb_field_name
             else:
-                base_field_name = get_field_name(self, field,
+                base_field_name = get_field_name(self, form['fields'][1], form_list[2:],
+                                                 current_repeat_list, 
+                                                 cb_field_name).lower()
+                base_field_name = base_field_name[:-1] # strip trailing num
+            field_names = get_field_names(self, form['fields'][1], 
+                                          form_list[2:], base_field_name)
+            checked_lines = []
+            answered = False
+            for name in field_names:
+                try:
+                    if line[name] == '1':
+                        checked_lines.append(name[-1])
+                        answered = True
+                    elif line[name] == '0':
+                        answered = True
+                except KeyError:
+                    pass
+            checked_fixtures = []
+            for checked_line in checked_lines:
+                choices = form['fields'][1]['choices']
+                choice = choices.split('|')
+                """
+                The number assigned to each choice by redcap might not start
+                at 1. This subtracts the starting num from the index so
+                an out of bounds error doesn't occur
+                """
+                starts_at = choice[0].split(',')[0]
+                choice = choice[int(checked_line)-int(starts_at)]
+                choice = choice.split(',')
+                fixture_dict['label'] = [form['fields'][0], choice[1]]
+                fixture_dict['value'] = [form['fields'][1], choice[0].strip(' ')]
+                checked_fixtures.append(dict(fixture_dict))
+ 
+
+            temp_primary = primary_key_counter
+            for i, fixture in enumerate(checked_fixtures):
+                if i < len(checked_fixtures)-1:
+                    additional_forms = additional_forms + 1
+                    clean_form_name = form['form name'].split(' ')[0].replace('$', '')
+                    fixtures.append([clean_form_name, fixture])
+                    pk_num_list.append(temp_primary+additional_forms)
+ 
+
+        else:
+            for field in form['fields']:
+                clean_field_name = re.sub('\${d\}', '', field['field name'])
+                #form_list[0] and form_list[1] are both 'base forms'
+                #form_list[0] is record, form_list[1] is the form name given for
+                #each field without repeating
+                if len(form_list[2:]) == 0:
+                    base_field_name = field['field name']
+                else:
+                    base_field_name = get_field_name(self, field,
                                                  form_list[2:],
                                                  current_repeat_list).lower()
-            if field['choices']:
-                field_names = get_field_names(self, field,
+                if field['choices']:
+                    field_names = get_field_names(self, field,
                                               form_list[2:], base_field_name)
-                checked_line = ''
-                answered = ''
-                for name in field_names:
-                    try:
-                        if len(field_names) > 1:
+                    checked_line = ''
+                    answered = ''
+                    for name in field_names:
+                        try:
+                            if len(field_names) > 1:
+                                if line[name] == '1':
+                                    checked_line = name[-1]
+                                    answered = True
+                                elif line[name] == '0':
+                                    answered = True
+                            else:
+                                if line[name]:
+                                    checked_line = line[name]
+                        except KeyError:
+                            #print 'ERROR: FIELD NOT FOUND ' + name
+                            #print field
+                            #print field_names
+                            pass
+                    #if the line is checked, the number of the option is the answer
+                    if checked_line:
+                        fixture_dict[clean_field_name] = [field, checked_line]
+                    elif answered is True:
+                        fixture_dict[clean_field_name] = [field, '0']
+                    else:
+                        fixture_dict[clean_field_name] = [field, '']
+                elif '_summary' in field['field name']:
+                    field_names = get_field_names_summary(self, field, form_list[2:],
+                                                        base_field_name[:-8])
+                    checked_lines = []
+                    answered = False
+                    for name in field_names:
+                        try:
                             if line[name] == '1':
-                                checked_line = name[-1]
+                                checked_lines.append(name[-1])
                                 answered = True
                             elif line[name] == '0':
                                 answered = True
-                        else:
-                            if line[name]:
-                                checked_line = line[name]
-                    except KeyError:
-                        #print 'ERROR: FIELD NOT FOUND ' + name
-                        #print field
-                        #print field_names
-                        pass
-                #if the line is checked, the number of the option is the answer
-                if checked_line:
-                    fixture_dict[clean_field_name] = [field, checked_line]
-                elif answered is True:
-                    fixture_dict[clean_field_name] = [field, '0']
+                        except KeyError:
+                            pass
+                    choices_str = ''
+                    for checked_line in checked_lines:
+                        choices = field['field note']
+                        choice = choices.split('|')
+                        """
+                        The number assigned to each choice might not start
+                        at 1. This subtracts the starting num from the index
+                        we check
+                        """
+                        starts_at = choice[0].split(',')[0]
+                        choice = choice[int(checked_line)-int(starts_at)]
+                        
+                        choices_str = choices_str + ' ' + choice
+                    fixture_dict[clean_field_name] = [field, choices_str]
                 else:
-                    fixture_dict[clean_field_name] = [field, '']
-            else:
-                try:
-                    fixture_dict[clean_field_name] = [field,
+                    try:
+                        fixture_dict[clean_field_name] = [field,
                                                       line[base_field_name]]
-                except KeyError:
-                    #print 'ERROR: NOT FOUND ' + base_field_name
-                    #print field
-                    #print base_field_name
-                    pass
+                    except KeyError:
+                        #print 'ERROR: NOT FOUND ' + base_field_name
+                        #print field
+                        #print base_field_name
+                        pass            
         clean_form_name = form['form name'].split(' ')[0].replace('$', '')
         fixtures.append([clean_form_name, fixture_dict])
 
         cur_ind = len(current_repeat_list) - 1
         update_current_repeats(self, num_repeats_list[::-1],
-                               current_repeat_list, cur_ind)
+                                current_repeat_list, cur_ind)
+        
+    return primary_key_counter, additional_forms
 
-    return primary_key_counter
 
-
-def get_field_name(self, field, form_list, repeat_num_list):
+def get_field_name(self, field, form_list, repeat_num_list, alt_field_name=None):
     """
     Loops through a list of forms. All forms are prefix forms except for the
     last form in form_list.
     """
     prefix = ''
+    if alt_field_name:
+        field_name = alt_field_name
+    else:
+        field_name = field['field name']
     for i in range(len(form_list)):
         if i != len(form_list)-1:
             str_split = form_list[i].split(' ')
@@ -262,14 +353,14 @@ def get_field_name(self, field, form_list, repeat_num_list):
             name = re.sub('\d$', '', name)
             num_repeats = repeat_num_list[i]
             prefix = prefix + name + str(num_repeats) + '_'
-        elif field['field name'].find('${d}') != -1:
-            field_name = re.sub('\$\{d\}',
+        elif field_name.find('${d}') != -1:
+            new_field_name = re.sub('\$\{d\}',
                                 str(repeat_num_list[-1]),
-                                field['field name'])
+                                field_name)
         else:
-            field_name = field['field name'] + '' + str(repeat_num_list[-1])
-    field_name = prefix + field_name
-    return field_name
+            new_field_name = field_name + '' + str(repeat_num_list[-1])
+    new_field_name = prefix + new_field_name
+    return new_field_name
 
 
 def find_related_forms(self, form_name, form_dict, foreign_forms=None):
@@ -291,7 +382,7 @@ def find_related_forms(self, form_name, form_dict, foreign_forms=None):
     return foreign_forms
 
 
-def get_field_names(self, field, form_dict, field_name=None):
+def get_field_names(self, field, form_dict, field_name):
     """
     Checkboxes and radio_other fields have multiple parts in the data csv,
     usually something like name1 name2 name3 for each checkbox/radio button
@@ -315,6 +406,15 @@ def get_field_names(self, field, form_dict, field_name=None):
                                        choice.split(',')[0].strip(' '))
     else:
         choices_field_names.append(field_name.lower())
+    return choices_field_names
+
+
+def get_field_names_summary(self, field, form_dict, field_name):
+    choices = field['field note'].split('|')
+    choices_field_names = []
+    for choice in choices:
+        choices_field_names.append(field_name.lower() + '___' + 
+                                   choice.split(',')[0].strip(' '))
     return choices_field_names
 
 

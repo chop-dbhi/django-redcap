@@ -7,7 +7,7 @@ class Command(BaseCommand):
     help = "A wrapper for REDCap subcommands"
 
     subcommands = {'inspect': 'inspect',
-                'rjson': 'json',
+                'json': 'rjson',
                 'models': 'models',
                 'fixture': 'fixture',
                 'convert': 'convert'
@@ -33,7 +33,7 @@ class Command(BaseCommand):
 
     def get_subcommand(self, name):
         try:
-            module = import_module('djredcap.management.subcommands.{0}'.format(name))
+            module = import_module('djredcap.management.subcommands.{0}'.format(self.subcommands[name]))
             return module.Command()
         except KeyError:
             raise CommandError('Unknown subcommand: djredcap {0}'.format(name))

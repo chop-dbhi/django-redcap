@@ -8,7 +8,6 @@ class Record(models.Model):
 
 class Demographic(models.Model):
     study_id = models.CharField(help_text='', null=True, max_length=2000, verbose_name='Study ID', blank=True)
-    checkbox_test = models.IntegerField(max_length=2000, blank=True, help_text='Helps the data entry person', null=True, verbose_name='Checkbox', choices=[(0, 'option 1'), (1, 'option 2'), (2, 'option 3'), (3, 'option 4')])
     date_enrolled = models.DateField(help_text='YYYY-MM-DD', null=True, verbose_name='Date subject signed consent', blank=True)
     file_upload = models.TextField(help_text='', null=True, verbose_name='file upload', blank=True) # This field type is a guess
     first_name = models.CharField(help_text='', null=True, max_length=2000, verbose_name='First Name', blank=True)
@@ -41,10 +40,20 @@ class Demographic(models.Model):
     subject_comments = models.TextField(help_text='', null=True, verbose_name='Comments', blank=True) # This field type is a guess
     etiology_esrd = models.IntegerField(help_text='', null=True, verbose_name='Etiology of ESRD', blank=True, choices=[(0, 'Diabetes'), (1, 'Hypertension'), (2, 'Glomerulonephritis'), (3, 'Polycystic Kidney Disease'), (4, 'Interstitial Nephritis'), (5, 'Hereditary Nephritis'), (6, 'Other')]) # This field type is a guess
     survey_1 = models.IntegerField(max_length=2000, blank=True, help_text='This describes the field', null=True, verbose_name='Test', choices=[(1, 'choice 1'), (2, 'choice 2')])
+    checkbox_test_summary = models.CharField(help_text='0, option 1 | 1, option 2 | 2, option 3 | 3, option 4', null=True, max_length=2000, verbose_name='Checkbox', blank=True)
     record = models.ForeignKey(Record)
 
     class Meta:
 	 db_table = 'demographic'
+
+
+class checkboxtest(models.Model):
+    label = models.CharField(help_text='Helps the data entry person', null=True, max_length=2000, verbose_name='Checkbox', blank=True)
+    value = models.IntegerField(max_length=2000, blank=True, help_text='Helps the data entry person', null=True, verbose_name='Checkbox', choices=[(0, 'option 1'), (1, 'option 2'), (2, 'option 3'), (3, 'option 4')])
+    demographic = models.ForeignKey(Demographic)
+
+    class Meta:
+	 db_table = 'checkboxtest'
 
 
 class BaselineDatum(models.Model):

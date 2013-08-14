@@ -25,7 +25,7 @@ def split_assert(self, line1, line2):
         except IndexError:
             pass
 
-"""
+
 class ConvertTestCase(TestCase):
     def test_multi_form_csv_with_repeating_fields(self):
         fileName = 'multi_form_with_rep_fields'
@@ -90,7 +90,7 @@ class ConvertTestCase(TestCase):
         for line1, line2 in izip(open(get_filename('models.py'),'r'),open(get_filename(cmp_fileName),'r')):
             self.assertEqual(line1,line2)
         shutil.copy(get_filename(json_fileName + '2'),get_filename(json_fileName))
-"""
+
 
 class JsonTestCase(TestCase):
     def test_multi_form_csv_with_repeating_fields(self):
@@ -137,7 +137,7 @@ class JsonTestCase(TestCase):
         for line1, line2 in izip(open(get_filename(fileName + '.json'),'r'),open(get_filename(cmp_fileName),'r')):
             self.assertEqual(line1,line2)
 
-"""
+
 class ModelsTestCase(TestCase):
     def test_multi_form_csv_with_repeating_fields(self):
         fileName = 'multi_form_with_rep_fields'
@@ -255,4 +255,4 @@ class RedcapTestCase(TestCase):
         cmp_file = open(get_filename('cmp_' + fileName + '.py'))
         for line1, line2 in izip(open(get_filename('models.py'),'r'),open(get_filename(cmp_fileName),'r')):
             self.assertEqual(line1,line2)
-"""
+

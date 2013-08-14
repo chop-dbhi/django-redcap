@@ -243,7 +243,6 @@ def generate_repeating_fixtures(self, line, form,
             temp_primary = primary_key_counter
             for i, fixture in enumerate(checked_fixtures):
                 if i < len(checked_fixtures)-1:
-                    print 'entered'
                     additional_forms = additional_forms + 1
                     clean_form_name = form['form name'].split(' ')[0].replace('$', '')
                     fixtures.append([clean_form_name, fixture])

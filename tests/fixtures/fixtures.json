@@ -195,16 +195,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": 0,
             "sex": null,
-            "last_name": "",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": 0,
             "first_name": "",
-            "checkbox_test": 0,
             "study_id": "CAR Demo",
             "dialysis_schedule_days": 0,
             "num_children": null,
@@ -236,16 +236,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "man",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": 0,
-            "last_name": "man",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": 0,
             "first_name": "hey",
-            "checkbox_test": 0,
             "study_id": "davis",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -277,16 +277,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "",
             "dialysis_unit_name": "",
             "weight": 145,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": 0,
-            "last_name": "",
+            "telephone_1": "",
+            "checkbox_test_summary": " 0, option 1   1, option 2 ",
             "ethnicity": 1,
             "first_name": "",
-            "checkbox_test": 1,
             "study_id": "ped stroke",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -318,16 +318,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": 2,
             "sex": null,
-            "last_name": "",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": null,
             "first_name": "",
-            "checkbox_test": 0,
             "study_id": "PID623587",
             "dialysis_schedule_days": 0,
             "num_children": null,
@@ -359,16 +359,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": null,
-            "last_name": "",
+            "telephone_1": "",
+            "checkbox_test_summary": " 0, option 1   1, option 2 ",
             "ethnicity": null,
             "first_name": "",
-            "checkbox_test": 1,
             "study_id": "replication test",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -400,16 +400,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": 0,
-            "last_name": "",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": 0,
             "first_name": "",
-            "checkbox_test": 0,
             "study_id": "Test",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -441,16 +441,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "asdfasdf",
+            "last_name": "O'Furniture",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": 0,
-            "last_name": "O'Furniture",
+            "telephone_1": "asdfasdf",
+            "checkbox_test_summary": "",
             "ethnicity": null,
             "first_name": "Patty",
-            "checkbox_test": 0,
             "study_id": "1",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -482,16 +482,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "Chovey",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": 0,
-            "last_name": "Chovey",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": null,
             "first_name": "Ann",
-            "checkbox_test": 0,
             "study_id": "2",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -523,16 +523,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "Nutt",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": 0,
-            "last_name": "Nutt",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": 0,
             "first_name": "Hazel",
-            "checkbox_test": 0,
             "study_id": "3",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -564,16 +564,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "Mellow",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": 0,
-            "last_name": "Mellow",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": null,
             "first_name": "Marsha",
-            "checkbox_test": 0,
             "study_id": "4",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -605,16 +605,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "Yew",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": 0,
-            "last_name": "Yew",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": null,
             "first_name": "Olive",
-            "checkbox_test": 0,
             "study_id": "5",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -646,16 +646,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "Akew",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": 0,
-            "last_name": "Akew",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": null,
             "first_name": "Barb",
-            "checkbox_test": 0,
             "study_id": "6",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -687,16 +687,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "Bugg",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": 0,
-            "last_name": "Bugg",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": null,
             "first_name": "Aida",
-            "checkbox_test": 0,
             "study_id": "7",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -728,16 +728,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "Biologist",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": 0,
-            "last_name": "Biologist",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": null,
             "first_name": "Maureen",
-            "checkbox_test": 0,
             "study_id": "8",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -769,16 +769,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "Dactyl",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": 0,
-            "last_name": "Dactyl",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": null,
             "first_name": "Teri",
-            "checkbox_test": 0,
             "study_id": "9",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -810,16 +810,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "Legge",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": 0,
-            "last_name": "Legge",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": null,
             "first_name": "Peg",
-            "checkbox_test": 0,
             "study_id": "10",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -851,16 +851,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "Grater",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": 0,
-            "last_name": "Grater",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": null,
             "first_name": "Allie",
-            "checkbox_test": 0,
             "study_id": "11",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -892,16 +892,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "Erd",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": 0,
-            "last_name": "Erd",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": null,
             "first_name": "Liz",
-            "checkbox_test": 0,
             "study_id": "12",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -933,16 +933,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "Di Nominator",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": 0,
-            "last_name": "Di Nominator",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": null,
             "first_name": "Lois",
-            "checkbox_test": 0,
             "study_id": "13",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -974,16 +974,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "Van Rider",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": 0,
-            "last_name": "Van Rider",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": null,
             "first_name": "Minnie",
-            "checkbox_test": 0,
             "study_id": "14",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -1015,16 +1015,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "Ringing",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": 0,
-            "last_name": "Ringing",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": null,
             "first_name": "Isabelle",
-            "checkbox_test": 0,
             "study_id": "15",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -1056,16 +1056,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "Sideways",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": 0,
-            "last_name": "Sideways",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": null,
             "first_name": "Eileen",
-            "checkbox_test": 0,
             "study_id": "16",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -1097,16 +1097,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "Book",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": 0,
-            "last_name": "Book",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": null,
             "first_name": "Rita",
-            "checkbox_test": 0,
             "study_id": "17",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -1138,16 +1138,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "Bath",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": 0,
-            "last_name": "Bath",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": null,
             "first_name": "Anita",
-            "checkbox_test": 0,
             "study_id": "18",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -1179,16 +1179,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "Upp",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": 0,
-            "last_name": "Upp",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": null,
             "first_name": "Harriet",
-            "checkbox_test": 0,
             "study_id": "19",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -1220,16 +1220,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "Tired",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": 1,
-            "last_name": "Tired",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": null,
             "first_name": "I.M.",
-            "checkbox_test": 0,
             "study_id": "20",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -1261,16 +1261,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "Yose",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": 1,
-            "last_name": "Yose",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": null,
             "first_name": "Audie",
-            "checkbox_test": 0,
             "study_id": "21",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -1302,16 +1302,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "Jah",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": 1,
-            "last_name": "Jah",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": null,
             "first_name": "Manny",
-            "checkbox_test": 0,
             "study_id": "23",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -1343,16 +1343,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": null,
-            "last_name": "",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": null,
             "first_name": "",
-            "checkbox_test": 0,
             "study_id": "24",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -1384,16 +1384,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": null,
-            "last_name": "",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": null,
             "first_name": "",
-            "checkbox_test": 0,
             "study_id": "25",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -1425,16 +1425,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "Smith",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": 0,
-            "last_name": "Smith",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": 2,
             "first_name": "Sam",
-            "checkbox_test": 0,
             "study_id": "26",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -1466,16 +1466,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "bae",
             "dialysis_unit_name": "",
             "weight": 19,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": null,
-            "last_name": "bae",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": 1,
             "first_name": "elle",
-            "checkbox_test": 0,
             "study_id": "1000",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -1507,16 +1507,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": null,
-            "last_name": "",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": null,
             "first_name": "",
-            "checkbox_test": 0,
             "study_id": "5001",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -1548,16 +1548,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": 0,
-            "last_name": "",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": 1,
             "first_name": "",
-            "checkbox_test": 0,
             "study_id": "5002",
             "dialysis_schedule_days": null,
             "num_children": 1,
@@ -1589,16 +1589,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "DATA",
             "dialysis_unit_name": "",
             "weight": 50,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": 0,
-            "last_name": "DATA",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": null,
             "first_name": "JOHN",
-            "checkbox_test": 0,
             "study_id": "9999",
             "dialysis_schedule_days": null,
             "num_children": 3,
@@ -1630,16 +1630,16 @@
         "fields": {
             "telephone_2": "(267) 426-0000",
             "file_upload": "",
-            "telephone_1": "(215) 590-1000",
+            "last_name": "Daye",
             "dialysis_unit_name": "ABC",
             "weight": 125,
             "dialysis_initiation": "2011-11-11",
             "access_type": 0,
             "sex": 1,
-            "last_name": "Daye",
+            "telephone_1": "(215) 590-1000",
+            "checkbox_test_summary": "  3, option 4",
             "ethnicity": 2,
             "first_name": "John",
-            "checkbox_test": 3,
             "study_id": "11100",
             "dialysis_schedule_days": 0,
             "num_children": null,
@@ -1671,16 +1671,16 @@
         "fields": {
             "telephone_2": "(267) 426-0667",
             "file_upload": "",
-            "telephone_1": "(267) 426-0666",
+            "last_name": "Day",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": null,
-            "last_name": "Day",
+            "telephone_1": "(267) 426-0666",
+            "checkbox_test_summary": "",
             "ethnicity": null,
             "first_name": "Susie",
-            "checkbox_test": 0,
             "study_id": "11101-05",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -1712,16 +1712,16 @@
         "fields": {
             "telephone_2": "",
             "file_upload": "",
-            "telephone_1": "",
+            "last_name": "",
             "dialysis_unit_name": "",
             "weight": null,
             "dialysis_initiation": null,
             "access_type": null,
             "sex": null,
-            "last_name": "",
+            "telephone_1": "",
+            "checkbox_test_summary": "",
             "ethnicity": null,
             "first_name": "",
-            "checkbox_test": 0,
             "study_id": "1223445",
             "dialysis_schedule_days": null,
             "num_children": null,
@@ -1745,6 +1745,296 @@
             "race": null,
             "dob": null,
             "subject_comments": ""
+        }
+    },
+    {
+        "pk": 1,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 1
+        }
+    },
+    {
+        "pk": 2,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 2
+        }
+    },
+    {
+        "pk": 3,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 3,
+            "value": 0,
+            "label": " option 1 "
+        }
+    },
+    {
+        "pk": 4,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 3,
+            "value": 1,
+            "label": " option 2 "
+        }
+    },
+    {
+        "pk": 5,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 4
+        }
+    },
+    {
+        "pk": 6,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 5,
+            "value": 0,
+            "label": " option 1 "
+        }
+    },
+    {
+        "pk": 7,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 5,
+            "value": 1,
+            "label": " option 2 "
+        }
+    },
+    {
+        "pk": 8,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 6
+        }
+    },
+    {
+        "pk": 9,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 7
+        }
+    },
+    {
+        "pk": 10,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 8
+        }
+    },
+    {
+        "pk": 11,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 9
+        }
+    },
+    {
+        "pk": 12,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 10
+        }
+    },
+    {
+        "pk": 13,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 11
+        }
+    },
+    {
+        "pk": 14,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 12
+        }
+    },
+    {
+        "pk": 15,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 13
+        }
+    },
+    {
+        "pk": 16,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 14
+        }
+    },
+    {
+        "pk": 17,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 15
+        }
+    },
+    {
+        "pk": 18,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 16
+        }
+    },
+    {
+        "pk": 19,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 17
+        }
+    },
+    {
+        "pk": 20,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 18
+        }
+    },
+    {
+        "pk": 21,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 19
+        }
+    },
+    {
+        "pk": 22,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 20
+        }
+    },
+    {
+        "pk": 23,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 21
+        }
+    },
+    {
+        "pk": 24,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 22
+        }
+    },
+    {
+        "pk": 25,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 23
+        }
+    },
+    {
+        "pk": 26,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 24
+        }
+    },
+    {
+        "pk": 27,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 25
+        }
+    },
+    {
+        "pk": 28,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 26
+        }
+    },
+    {
+        "pk": 29,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 27
+        }
+    },
+    {
+        "pk": 30,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 28
+        }
+    },
+    {
+        "pk": 31,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 29
+        }
+    },
+    {
+        "pk": 32,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 30
+        }
+    },
+    {
+        "pk": 33,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 31
+        }
+    },
+    {
+        "pk": 34,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 32
+        }
+    },
+    {
+        "pk": 35,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 33
+        }
+    },
+    {
+        "pk": 36,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 34
+        }
+    },
+    {
+        "pk": 37,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 35
+        }
+    },
+    {
+        "pk": 38,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 36,
+            "value": 3,
+            "label": " option 4"
+        }
+    },
+    {
+        "pk": 39,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 37
+        }
+    },
+    {
+        "pk": 40,
+        "model": "mysite.checkboxtest",
+        "fields": {
+            "demographic": 38
         }
     },
     {

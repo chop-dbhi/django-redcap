@@ -548,8 +548,8 @@ def get_FK(self, form_name):
     """
     Returns foreign key line needed in repeating models
     """
-    return '    ' + form_name.lower() + ' = models.ForeignKey(' + form_name + ')\n'
-
+    return "    {form_name_lower} = models.ForeignKey({form_name})\n" \
+           .format(form_name_lower = form_name.lower(), form_name = form_name)
 
 def get_meta(self, table_name):
     """ 

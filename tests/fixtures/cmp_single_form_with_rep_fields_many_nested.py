@@ -15,11 +15,20 @@ class PriorGeneticTesting(models.Model):
 
 
 class Deletion(models.Model):
-    mito_combo_analysis_sample = models.IntegerField(help_text='', null=True, verbose_name='Sample type for mitochondrial deletion analysis (from combined analysis $d1)', blank=True, choices=[(1, 'blood'), (2, 'urine'), (3, 'muscle'), (4, 'saliva'), (5, 'other')]) # This field type is a guess
+    mito_combo_analysis_sample_summary = models.CharField(help_text='1, blood | 2, urine | 3, muscle | 4, saliva | 5, other', null=True, max_length=2000, verbose_name='Sample type for mitochondrial deletion analysis (from combined analysis $d1)', blank=True)
     priorgenetictesting = models.ForeignKey(PriorGeneticTesting)
 
     class Meta:
 	 db_table = 'deletion'
+
+
+class mitocomboanalysissample(models.Model):
+    label = models.CharField(help_text='', null=True, max_length=2000, verbose_name='Sample type for mitochondrial deletion analysis (from combined analysis $d1)', blank=True)
+    value = models.IntegerField(help_text='', null=True, verbose_name='Sample type for mitochondrial deletion analysis (from combined analysis $d1)', blank=True, choices=[(1, 'blood'), (2, 'urine'), (3, 'muscle'), (4, 'saliva'), (5, 'other')]) # This field type is a guess
+    deletion = models.ForeignKey(Deletion)
+
+    class Meta:
+	 db_table = 'mitocomboanalysissample'
 
 
 class Deletion2(models.Model):

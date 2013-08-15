@@ -1,24 +1,25 @@
 import sys
 from optparse import NO_DEFAULT, OptionParser
-from django.core.management.base import CommandError, BaseCommand, handle_default_options
+from django.core.management.base import CommandError, BaseCommand
+from django.core.management.base import handle_default_options
 from django.utils.importlib import import_module
+
 
 class Command(BaseCommand):
     help = "A wrapper for REDCap subcommands"
 
     subcommands = {'inspect': 'inspect',
-                'json': 'rjson',
-                'models': 'models',
-                'fixture': 'fixture',
-                'convert': 'convert'
-                }
+                   'json': 'rjson',
+                   'models': 'models',
+                   'fixture': 'fixture',
+                   'convert': 'convert'
+                   }
 
     def print_subcommands(self, prog_name):
         usage = ['', 'Available subcommands:']
         for name in sorted(self.subcommands):
             usage.append('  {0}'.format(name))
         return '\n'.join(usage)
-
 
     def usage(self, subcommand):
         usage = '%prog {0} subcommand [options] [args]'.format(subcommand)
@@ -30,24 +31,28 @@ class Command(BaseCommand):
         super(Command, self).print_help(prog_name, subcommand)
         sys.stdout.write('{0}\n\n'.format(self.print_subcommands(prog_name)))
 
-
     def get_subcommand(self, name):
         try:
-            module = import_module('djredcap.management.subcommands.{0}'.format(self.subcommands[name]))
+            module = import_module('djredcap.management.subcommands.{0}'
+                                   .format(self.subcommands[name]))
             return module.Command()
         except KeyError:
             raise CommandError('Unknown subcommand: djredcap {0}'.format(name))
-
 
     def run_from_argv(self, argv):
         """Set up any environment changes requested (e.g., Python path
         and Django settings), then run this command.
         """
-        if len(argv) > 2 and not argv[2].startswith('-') and argv[2] in self.subcommands.keys():
+        if len(argv) > 2 and not argv[2].startswith('-') and \
+                argv[2] in self.subcommands.keys():
             subcommand = self.subcommands[argv[2]]
             klass = self.get_subcommand(subcommand)
-            parser = OptionParser(prog=argv[0], usage=klass.usage('{0} {1}'.format(argv[1], subcommand)),
-                version=klass.get_version(), option_list=klass.option_list)
+            parser = OptionParser(prog=argv[0],
+                                  usage=klass.usage('{0} {1}'
+                                                    .format(argv[1],
+                                                            subcommand)),
+                                  version=klass.get_version(),
+                                  option_list=klass.option_list)
             options, args = parser.parse_args(argv[3:])
             args = [subcommand] + args
         else:

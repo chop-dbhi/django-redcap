@@ -26,21 +26,22 @@ header_keys = (
     'question_number'
 )
 
+
 class Command(BaseCommand):
     help = """Attempts to read a REDCap data dictionary (CSV) and output a
     matching JSON file. Then attempts to read a JSON file and output matching
     Django models. Can take either a REDCap CSV file or a json file as
     input."""
-    requires_model_validation = False;
+    requires_model_validation = False
     db_module = 'django.db'
-    args = 'filename';
+    args = 'filename'
 
-    def handle(self, fileName=None, *args, **options):
-        if not fileName:
+    def handle(self, file_name=None, *args, **options):
+        if not file_name:
             raise CommandError('Enter a filename')
-        fin = open(fileName)
+        fin = open(file_name)
         dialect = csv.Sniffer().sniff(fin.read(1024))
         fin.seek(0)
-        reader = csv.DictReader(fin,fieldnames=header_keys,dialect=dialect)
+        reader = csv.DictReader(fin, fieldnames=header_keys, dialect=dialect)
         reader.next()
-        fileName = csv_2_json(self,reader,fileName)
+        file_name = csv_2_json(self, reader, file_name)

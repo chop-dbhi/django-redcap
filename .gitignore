@@ -1,4 +1,8 @@
-*.py[co]
+*.py?
+*.sw?
+*.egg
+*.egg-info
 .DS_Store
+.coverage
 MANIFEST
 dist

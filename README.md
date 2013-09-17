@@ -53,28 +53,37 @@ Commands are executed using the `redcap` command with a sub-command, e.g.:
 
 **inspect**
 
+The basic command. The inspect command takes in a redcap data dictionary and outputs a
+models.py file based on the dictionary, along with an intermediate JSON file describing 
+the data dictionary.
 ```bash
 ./manage.py redcap inspect path/to/exported/data_dictionary.csv
 ```
-
 **convert**
+
+The convert command takes the data dictionary and directly writes to models.py. 
+The json file that would normally be output (inspect) is not created.
 
 ```bash
 ./manage.py redcap convert path/to/exported/data_dictionary.csv
 ```
 **models**
 
+The models command takes the intermediate JSON file and writes a models.py file based on it.
+
 ```bash
 ./manage.py redcap models path/to/generated/json_file.json
 ```
-
 **json**
 
+The json command takes the data dictionary from redcap as input and outputs an intermediate JSON file.
 ```bash
 ./manage.py redcap json path/to/exported/data_dictionary.csv
 ```
 **fixture**
 
+The fixture command creates a django data fixture from a redcap data file, a JSON intermediate file(generated
+from inspect or json commands) and a django project name. The name of the outputted file is fixtures.json.
 ```bash
 ./manage.py redcap fixture path/to/exported/data_file.csv path/to/generated/json_file.json django_project_name
 ```

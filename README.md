@@ -57,3 +57,24 @@ Commands are executed using the `redcap` command with a sub-command, e.g.:
 ./manage.py redcap inspect path/to/exported/data_dictionary.csv
 ```
 
+**convert**
+
+```bash
+./manage.py redcap convert path/to/exported/data_dictionary.csv
+```
+**models**
+
+```bash
+./manage.py redcap models path/to/generated/json_file.json
+```
+
+**json**
+
+```bash
+./manage.py redcap json path/to/exported/data_dictionary.csv
+```
+**fixture**
+
+```bash
+./manage.py redcap fixture path/to/exported/data_file.csv path/to/generated/json_file.json django_project_name
+```

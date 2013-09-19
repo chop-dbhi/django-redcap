@@ -50,7 +50,7 @@ class Command(BaseCommand):
             raise CommandError('Enter a filename')
 
         json_filename = options.get('json')
-        fin = open(file_name)
+        fin = open(file_name, 'rU')
         dialect = csv.Sniffer().sniff(fin.read(1024))
         fin.seek(0)
         reader = csv.DictReader(fin, fieldnames=header_keys, dialect=dialect)

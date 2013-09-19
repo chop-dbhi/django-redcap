@@ -23,6 +23,9 @@ easy_install inflect
 --------------------
 To install:
 
+1. Download django-redcap from github
+2. Enter /django-redcap/ and do
+
 ```bash
 python setup.py sdist
 cd dist
@@ -87,3 +90,29 @@ from inspect or json commands) and a django project name. The name of the output
 ```bash
 ./manage.py redcap fixture path/to/exported/data_file.csv path/to/generated/json_file.json django_project_name
 ```
+
+How to use it
+-------------
+You will need a REDCap data dictionary (.csv). A data dictionary would be a file that 
+describes the fields in the database you are looking to create a model of. Each line in a data dictionary would 
+be a description of a field, from its name, form, branching logic, type, etc.
+
+Use the inspect command to create a models.py file from the REDCap data dictionary. 
+For example:
+```bash
+./manage.py redcap inspect data_dictionary.csv
+```
+Outputted will be a json file named after the data dictionary and the models.py file. The json intermediate is
+currently used to create a fixtures.json file, since it is schema based on the model.
+
+To create a fixtures.json file to go along with your models.py file, you will need a REDCap data file (.csv) that
+contains data from the matching database, the matching intermediate file created from running the inspect or json
+commands, and the name of your django project.
+
+```bash
+./manage.py redcap fixture data.csv intermediate.json projectname
+```
+
+How it works
+-------------
+This will be a step by step explanation on how djredcap and djfixture work.

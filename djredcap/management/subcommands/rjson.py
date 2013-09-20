@@ -39,7 +39,7 @@ class Command(BaseCommand):
     def handle(self, file_name=None, *args, **options):
         if not file_name:
             raise CommandError('Enter a filename')
-        fin = open(file_name)
+        fin = open(file_name, 'rU')
         dialect = csv.Sniffer().sniff(fin.read(1024))
         fin.seek(0)
         reader = csv.DictReader(fin, fieldnames=header_keys, dialect=dialect)

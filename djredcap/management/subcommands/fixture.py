@@ -28,7 +28,7 @@ class Command(BaseCommand):
 
         global __project_name__
         __project_name__ = app_name
-        fin = open(file)
+        fin = open(file, 'rU')
         header_keys = fin.readline().split(',')
         dialect = csv.Sniffer().sniff(fin.read(1024))
         reader = csv.DictReader(fin, fieldnames=header_keys, dialect=dialect)

@@ -60,7 +60,23 @@ class Command(BaseCommand):
         fin.seek(0)
         reader = csv.DictReader(fin, fieldnames=header_keys, dialect=dialect)
 
-        reader.next()
+	
+        if fileName.find('.json') == -1:
+
+            # Open the file in a normal reader to see if the file is a REDCap data dictionary
+            # A REDCap data Dictionary begins with the four necessary columns:
+            # Variable/Field Name | Form Name | Field Type | Field Label in any order
+            header = reader.next()
+
+            if header['field_name'] != 'Variable / Field Name' or \
+                header['form_name'] != 'Form Name' or \
+                header['field_type'] != 'Field Type' or \
+                header['field_label'] != 'Field Label':            
+
+                sys.stderr.write('Invalid header. File must be a valid REDCap data dictionary.\n')
+                sys.stderr.flush() 
+                sys.exit(1)
+
         if fileName.find('.json') == -1:
             fileName = djredcap.csv_2_json(self, reader, fileName)
         djredcap.json_2_dj(self, fileName)

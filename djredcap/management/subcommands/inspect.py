@@ -51,6 +51,8 @@ class Command(BaseCommand):
     db_module = 'django.db'
     args = 'filename'
 
+    #useless comment to allow a pull request
+
     def handle(self, fileName=None, *args, **options):
         if not fileName:
             raise CommandError('Enter a filename')

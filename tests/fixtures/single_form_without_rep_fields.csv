@@ -1,4 +1,4 @@
-riable / Field Name","Form Name","Section Header","Field Type","Field Label","Choices, Calculations, OR Slider Labels","Field Note","Text Validation Type OR Show Slider Number","Text Validation Min","Text Validation Max",Identifier?,"Branching Logic (Show field only if...)","Required Field?","Custom Alignment","Question Number (surveys only)"
+"Variable / Field Name","Form Name","Section Header","Field Type","Field Label","Choices, Calculations, OR Slider Labels","Field Note","Text Validation Type OR Show Slider Number","Text Validation Min","Text Validation Max",Identifier?,"Branching Logic (Show field only if...)","Required Field?","Custom Alignment","Question Number (surveys only)"
 study_id,demographics,,text,"Study ID",,,,,,,,,,
 checkbox_test,demographics,,checkbox,Checkbox,"0, option 1 | 1, option 2 | 2, option 3 | 3, option 4","Helps the data entry person",,,,,,,,
 date_enrolled,demographics,,text,"Date subject signed consent",,YYYY-MM-DD,date_ymd,,,,,,,

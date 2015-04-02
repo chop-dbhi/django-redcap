@@ -6,7 +6,7 @@ import sys
 import re
 import inflect
 from optparse import make_option
-import djredcap
+import djconvert
 from django.core.management.base import BaseCommand, CommandError
 
 header_keys = (
@@ -57,9 +57,9 @@ class Command(BaseCommand):
 
         reader.next()
 
-        file_name = djredcap.csv_2_json(self, reader, file_name)
+        file_name = djconvert.csv_2_json(self, reader, file_name)
         file_name1 = file_name
-        djredcap.json_2_dj(self, file_name)
+        djconvert.json_2_dj(self, file_name)
         if json_filename:
             os.rename(file_name1, json_filename)
         else:

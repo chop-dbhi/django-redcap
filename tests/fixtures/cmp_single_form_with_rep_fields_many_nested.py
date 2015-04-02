@@ -7,7 +7,7 @@ class Record(models.Model):
 
 
 class PriorGeneticTesting(models.Model):
-    mito_combo_analysis_loc = models.CharField(help_text='', null=True, max_length=2000, verbose_name='Lab where combination mitochondrial analysis was performed', blank=True)
+    mito_combo_analysis_loc = models.CharField(help_text=u'', null=True, max_length=2000, verbose_name=u'Lab where combination mitochondrial analysis was performed', blank=True)
     record = models.ForeignKey(Record)
 
     class Meta:
@@ -15,7 +15,7 @@ class PriorGeneticTesting(models.Model):
 
 
 class Deletion(models.Model):
-    mito_combo_analysis_sample_summary = models.CharField(help_text='1, blood | 2, urine | 3, muscle | 4, saliva | 5, other', null=True, max_length=2000, verbose_name='Sample type for mitochondrial deletion analysis (from combined analysis $d1)', blank=True)
+    mito_combo_analysis_sample_summary = models.CharField(help_text=u'1, blood | 2, urine | 3, muscle | 4, saliva | 5, other', null=True, max_length=2000, verbose_name=u'Sample type for mitochondrial deletion analysis (from combined analysis $d1)', blank=True)
     priorgenetictesting = models.ForeignKey(PriorGeneticTesting)
 
     class Meta:
@@ -23,8 +23,8 @@ class Deletion(models.Model):
 
 
 class mitocomboanalysissample(models.Model):
-    label = models.CharField(help_text='', null=True, max_length=2000, verbose_name='Sample type for mitochondrial deletion analysis (from combined analysis $d1)', blank=True)
-    value = models.IntegerField(help_text='', null=True, verbose_name='Sample type for mitochondrial deletion analysis (from combined analysis $d1)', blank=True, choices=[(1, 'blood'), (2, 'urine'), (3, 'muscle'), (4, 'saliva'), (5, 'other')]) # This field type is a guess
+    label = models.CharField(help_text=u'', null=True, max_length=2000, verbose_name=u'Sample type for mitochondrial deletion analysis (from combined analysis $d1)', blank=True)
+    value = models.IntegerField(help_text=u'', null=True, verbose_name=u'Sample type for mitochondrial deletion analysis (from combined analysis $d1)', blank=True, choices=[(1, u'blood'), (2, u'urine'), (3, u'muscle'), (4, u'saliva'), (5, u'other')]) # This field type is a guess
     deletion = models.ForeignKey(Deletion)
 
     class Meta:
@@ -32,8 +32,8 @@ class mitocomboanalysissample(models.Model):
 
 
 class Deletion2(models.Model):
-    dc_deletion = models.CharField(help_text='', null=True, max_length=2000, verbose_name='What was the disease causing deletion identified on mitochondrial deletion analysis (from combined analysis)?', blank=True)
-    dc_deletion_spec = models.CharField(help_text='', null=True, max_length=2000, verbose_name='Other details for disease causing deletion on mitochondrial deletion analysis (from combined analysis)', blank=True)
+    dc_deletion = models.CharField(help_text=u'', null=True, max_length=2000, verbose_name=u'What was the disease causing deletion identified on mitochondrial deletion analysis (from combined analysis)?', blank=True)
+    dc_deletion_spec = models.CharField(help_text=u'', null=True, max_length=2000, verbose_name=u'Other details for disease causing deletion on mitochondrial deletion analysis (from combined analysis)', blank=True)
     deletion = models.ForeignKey(Deletion)
 
     class Meta:
@@ -41,7 +41,7 @@ class Deletion2(models.Model):
 
 
 class VariantOfUnknownSignificance(models.Model):
-    vus = models.CharField(help_text='', null=True, max_length=2000, verbose_name='variant of unknown significance on mitochondrial deletion analysis (from combined analysis)', blank=True)
+    vus = models.CharField(help_text=u'', null=True, max_length=2000, verbose_name=u'variant of unknown significance on mitochondrial deletion analysis (from combined analysis)', blank=True)
     deletion2 = models.ForeignKey(Deletion2)
 
     class Meta:
@@ -49,8 +49,8 @@ class VariantOfUnknownSignificance(models.Model):
 
 
 class Panel(models.Model):
-    targeted_mito_combo_panel_type = models.CharField(help_text='', null=True, max_length=2000, verbose_name='panel performed (on combination analysis)?', blank=True)
-    targeted_mito_combo_panel_results = models.TextField(help_text='', null=True, verbose_name='Describe results of panel (on combined analysis)', blank=True) # This field type is a guess
+    targeted_mito_combo_panel_type = models.CharField(help_text=u'', null=True, max_length=2000, verbose_name=u'panel performed (on combination analysis)?', blank=True)
+    targeted_mito_combo_panel_results = models.TextField(help_text=u'', null=True, verbose_name=u'Describe results of panel (on combined analysis)', blank=True) # This field type is a guess
     priorgenetictesting = models.ForeignKey(PriorGeneticTesting)
 
     class Meta:
@@ -58,7 +58,7 @@ class Panel(models.Model):
 
 
 class Gene(models.Model):
-    gene = models.CharField(help_text='', null=True, max_length=2000, verbose_name='gene on panel that contained mutation (on combined analysis)', blank=True)
+    gene = models.CharField(help_text=u'', null=True, max_length=2000, verbose_name=u'gene on panel that contained mutation (on combined analysis)', blank=True)
     panel = models.ForeignKey(Panel)
 
     class Meta:
@@ -66,7 +66,7 @@ class Gene(models.Model):
 
 
 class MdnaChange(models.Model):
-    mdna_change = models.CharField(help_text='', null=True, max_length=2000, verbose_name='change in mDNA on gene on panel (on combined analysis)', blank=True)
+    mdna_change = models.CharField(help_text=u'', null=True, max_length=2000, verbose_name=u'change in mDNA on gene on panel (on combined analysis)', blank=True)
     gene = models.ForeignKey(Gene)
 
     class Meta:
@@ -74,7 +74,7 @@ class MdnaChange(models.Model):
 
 
 class MdnaVariantOfUnknownSignificance(models.Model):
-    vus_mdna = models.CharField(help_text='', null=True, max_length=2000, verbose_name='variant of unknown significance on gene from panel (on combined analysis)', blank=True)
+    vus_mdna = models.CharField(help_text=u'', null=True, max_length=2000, verbose_name=u'variant of unknown significance on gene from panel (on combined analysis)', blank=True)
     panel = models.ForeignKey(Panel)
 
     class Meta:

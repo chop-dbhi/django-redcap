@@ -523,7 +523,7 @@ def cast_field(self, field, field_val):
     """
     field_type = get_field_type(self, field)
     if field_type == 'CharField' or field_type == 'TextField':
-        return str(field_val)
+        return field_val
     elif field_type == 'IntegerField':
         if field_val and field_val.isdigit():
             return int(field_val)

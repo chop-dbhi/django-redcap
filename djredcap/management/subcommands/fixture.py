@@ -5,10 +5,10 @@ import json
 import re
 import math
 import djfixture
+from djredcap import _csv
 from django.core.management.base import BaseCommand, CommandError
 
 __project_name__ = ''
-
 
 class Command(BaseCommand):
     requires_model_validation = False
@@ -31,7 +31,7 @@ class Command(BaseCommand):
         fin = open(file, 'rU')
         header_keys = fin.readline().split(',')
         dialect = csv.Sniffer().sniff(fin.read(1024))
-        reader = csv.DictReader(fin, fieldnames=header_keys, dialect=dialect)
+        reader = _csv.UnicodeDictReader(fin, fieldnames=header_keys, encoding='latin-1', dialect=dialect)
         reader.next()
 
         fout = open(os.path.join(os.path.dirname(file), 'fixtures.json'), 'w+')

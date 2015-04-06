@@ -575,7 +575,7 @@ def get_field_value(self, line, field):
     """
     Determines the value of a field from the json representation.
     """
-    return str(line[field])
+    return line[field]
 
 
 def get_FK(self, form_name):

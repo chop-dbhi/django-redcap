@@ -5,7 +5,7 @@ import keyword
 import sys
 import re
 import inflect
-from .djredcap import csv_2_json
+from .djconvert import csv_2_json
 from django.core.management.base import BaseCommand, CommandError
 
 header_keys = (

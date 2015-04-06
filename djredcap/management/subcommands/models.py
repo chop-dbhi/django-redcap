@@ -5,7 +5,7 @@ import keyword
 import sys
 import re
 import inflect
-import djredcap
+import djconvert
 from django.core.management.base import BaseCommand, CommandError
 
 header_keys = (
@@ -43,4 +43,4 @@ class Command(BaseCommand):
         reader = csv.DictReader(fin, fieldnames=header_keys, dialect=dialect)
 
         reader.next()
-        fileName = djredcap.json_2_dj(self, file_name)
+        fileName = djconvert.json_2_dj(self, file_name)

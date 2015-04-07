@@ -1,4 +1,5 @@
 import sys
+from optparse import make_option
 from optparse import NO_DEFAULT, OptionParser
 from django.core.management.base import CommandError, BaseCommand
 from django.core.management.base import handle_default_options

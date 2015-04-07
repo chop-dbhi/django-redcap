@@ -437,9 +437,13 @@ def generate_json_field(self, row, json_str):
     return json.dumps(data)
 
 
-def json_2_dj(self, file_name):
+def json_2_dj(self, file_name, model_filename):
     new_file_name = remove_file_extension(self, os.path.basename(file_name))
-    fout = open(os.path.join(os.path.dirname(file_name), 'models.py'), 'w+')
+    if model_filename == None:
+        fout = sys.stdout
+    else:
+        fout = open(os.path.join(os.getcwd(), model_filename), 'w+')
+
     fout.write('from %s import models' % self.db_module)
     fout.write('\n')
     fout.write('\n')

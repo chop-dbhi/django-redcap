@@ -39,10 +39,13 @@ class Command(BaseCommand):
     args = 'filename'
 
     json_filename = ''
-
+    # Add a command line option -m allowing the user to set a filename for models.
+    # Filename is relative to the current working directory.
     option_list = BaseCommand.option_list + (
         make_option('--JSON', action='store', dest='json',
                     help='Print a JSON file when using convert, default no'),
+        make_option('-m', '--model-file', dest='model_filename',
+                    help='Filename to which models are written'),
     )
 
     def handle(self, file_name=None, *args, **options):
@@ -59,7 +62,7 @@ class Command(BaseCommand):
 
         file_name = djconvert.csv_2_json(self, reader, file_name)
         file_name1 = file_name
-        djconvert.json_2_dj(self, file_name)
+        djconvert.json_2_dj(self, file_name, options['model_filename'])
         if json_filename:
             os.rename(file_name1, json_filename)
         else:

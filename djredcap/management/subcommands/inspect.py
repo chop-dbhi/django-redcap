@@ -6,6 +6,7 @@ import sys
 import re
 import inflect
 import djconvert
+from optparse import make_option
 from djredcap import _csv
 from django.core.management.base import BaseCommand, CommandError
 
@@ -50,6 +51,12 @@ class Command(BaseCommand):
     requires_model_validation = False
     db_module = 'django.db'
     args = 'filename'
+    # Add a command line option -m allowing the user to set a filename for models.
+    # Filename is relative to the current working directory.
+    option_list = BaseCommand.option_list + (
+        make_option('-m', '--model-file', dest='model_filename',
+                    help='Filename to which models are written'),
+    )
 
     def handle(self, fileName=None, *args, **options):
         if not fileName:
@@ -80,4 +87,4 @@ class Command(BaseCommand):
         
         if fileName.find('.json') == -1:
             fileName = djconvert.csv_2_json(self, reader, fileName)
-        djconvert.json_2_dj(self, fileName)
+        djconvert.json_2_dj(self, fileName, options['model_filename'])

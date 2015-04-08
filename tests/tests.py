@@ -33,7 +33,7 @@ class ConvertTestCase(TestCase):
         json_fileName = fileName + '.json'
         shutil.copy(get_filename(json_fileName),get_filename(json_fileName + '2'))
         cmp_fileName = 'cmp_' + fileName + '.py'
-        call_command('redcap','convert',get_filename(csv_fileName))
+        call_command('redcap','convert',get_filename(csv_fileName), model_filename=os.path.join(os.path.dirname(get_filename(csv_fileName)), 'models.py'))
         cmp_file = open(get_filename(cmp_fileName))
         for line1, line2 in izip(open(get_filename('models.py'),'r'),open(get_filename(cmp_fileName),'r')):
             self.assertEqual(line1,line2)
@@ -46,7 +46,7 @@ class ConvertTestCase(TestCase):
         json_fileName = fileName + '.json'
         shutil.copy(get_filename(json_fileName),get_filename(json_fileName + '2'))
         cmp_fileName = 'cmp_' + fileName + '.py'
-        call_command('redcap','convert',get_filename(csv_fileName))
+        call_command('redcap','convert',get_filename(csv_fileName), model_filename=os.path.join(os.path.dirname(get_filename(csv_fileName)), 'models.py'))
         cmp_file = open(get_filename('cmp_' + fileName + '.py'))
         for line1, line2 in izip(open(get_filename('models.py'),'r'),open(get_filename(cmp_fileName),'r')):
             self.assertEqual(line1,line2)
@@ -59,7 +59,7 @@ class ConvertTestCase(TestCase):
         json_fileName = fileName + '.json'
         shutil.copy(get_filename(json_fileName),get_filename(json_fileName + '2'))
         cmp_fileName = 'cmp_' + fileName + '.py'
-        call_command('redcap','convert',get_filename(csv_fileName))
+        call_command('redcap','convert',get_filename(csv_fileName), model_filename=os.path.join(os.path.dirname(get_filename(csv_fileName)), 'models.py'))
         cmp_file = open(get_filename('cmp_' + fileName + '.py'))
         for line1, line2 in izip(open(get_filename('models.py'),'r'),open(get_filename(cmp_fileName),'r')):
             self.assertEqual(line1,line2)
@@ -71,7 +71,7 @@ class ConvertTestCase(TestCase):
         json_fileName = fileName + '.json'
         shutil.copy(get_filename(json_fileName),get_filename(json_fileName + '2'))
         cmp_fileName = 'cmp_' + fileName + '.py'
-        call_command('redcap','convert',get_filename(csv_fileName))
+        call_command('redcap','convert',get_filename(csv_fileName), model_filename=os.path.join(os.path.dirname(get_filename(csv_fileName)), 'models.py'))
         cmp_file = open(get_filename('cmp_' + fileName + '.py'))
         for line1, line2 in izip(open(get_filename('models.py'),'r'),open(get_filename(cmp_fileName),'r')):
             self.assertEqual(line1,line2)
@@ -84,7 +84,7 @@ class ConvertTestCase(TestCase):
         json_fileName = fileName + '.json'
         shutil.copy(get_filename(json_fileName),get_filename(json_fileName + '2'))
         cmp_fileName = 'cmp_' + fileName + '.py'
-        call_command('redcap','convert',get_filename(csv_fileName))
+        call_command('redcap','convert',get_filename(csv_fileName), model_filename=os.path.join(os.path.dirname(get_filename(csv_fileName)), 'models.py'))
         cmp_file = open(get_filename('cmp_' + fileName + '.py'))
         for line1, line2 in izip(open(get_filename('models.py'),'r'),open(get_filename(cmp_fileName),'r')):
             self.assertEqual(line1,line2)
@@ -142,7 +142,7 @@ class ModelsTestCase(TestCase):
         fileName = 'multi_form_with_rep_fields'
         csv_fileName = fileName + '.json'
         cmp_fileName = 'cmp_' + fileName + '.py'
-        call_command('redcap','models',get_filename(csv_fileName))
+        call_command('redcap','models',get_filename(csv_fileName), model_filename=os.path.join(os.path.dirname(get_filename(csv_fileName)), 'models.py'))
         cmp_file = open(get_filename(cmp_fileName))
         for line1, line2 in izip(open(get_filename('models.py'),'r'),open(get_filename(cmp_fileName),'r')):
             self.assertEqual(line1,line2)
@@ -151,7 +151,7 @@ class ModelsTestCase(TestCase):
         fileName = 'single_form_with_rep_fields_start_with_repeat'
         csv_fileName = fileName + '.json'
         cmp_fileName = 'cmp_' + fileName + '.py'
-        call_command('redcap','models',get_filename(csv_fileName))
+        call_command('redcap','models',get_filename(csv_fileName), model_filename=os.path.join(os.path.dirname(get_filename(csv_fileName)), 'models.py'))
         cmp_file = open(get_filename(cmp_fileName))
         for line1, line2 in izip(open(get_filename('models.py'),'r'),open(get_filename(cmp_fileName),'r')):
             self.assertEqual(line1,line2)
@@ -160,7 +160,7 @@ class ModelsTestCase(TestCase):
         fileName = 'single_form_with_rep_fields_many_nested'
         csv_fileName = fileName + '.json'
         cmp_fileName = 'cmp_' + fileName + '.py'
-        call_command('redcap','models',get_filename(csv_fileName))
+        call_command('redcap','models',get_filename(csv_fileName), model_filename=os.path.join(os.path.dirname(get_filename(csv_fileName)), 'models.py'))
         cmp_file = open(get_filename('cmp_' + fileName + '.py'))
         for line1, line2 in izip(open(get_filename('models.py'),'r'),open(get_filename(cmp_fileName),'r')):
             self.assertEqual(line1,line2)
@@ -169,7 +169,7 @@ class ModelsTestCase(TestCase):
         fileName = 'multi_form_without_rep_fields'
         csv_fileName = fileName + '.json'
         cmp_fileName = 'cmp_' + fileName + '.py'
-        call_command('redcap','models',get_filename(csv_fileName))
+        call_command('redcap','models',get_filename(csv_fileName), model_filename=os.path.join(os.path.dirname(get_filename(csv_fileName)), 'models.py'))
         cmp_file = open(get_filename('cmp_' + fileName + '.py'))
         for line1, line2 in izip(open(get_filename('models.py'),'r'),open(get_filename(cmp_fileName),'r')):
             self.assertEqual(line1,line2)
@@ -178,7 +178,7 @@ class ModelsTestCase(TestCase):
         fileName = 'single_form_without_rep_fields'
         csv_fileName = fileName + '.json'
         cmp_fileName = 'cmp_' + fileName + '.py'
-        call_command('redcap','models',get_filename(csv_fileName))
+        call_command('redcap','models',get_filename(csv_fileName), model_filename=os.path.join(os.path.dirname(get_filename(csv_fileName)), 'models.py'))
         cmp_file = open(get_filename('cmp_' + fileName + '.py'))
         for line1, line2 in izip(open(get_filename('models.py'),'r'),open(get_filename(cmp_fileName),'r')):
             self.assertEqual(line1,line2)
@@ -190,8 +190,7 @@ class FixtureTestCase(TestCase):
         csv_file_name1 = file_name + '.csv'
         csv_file_name2 = file_name + '.json'
         cmp_file_name = 'cmp_' + file_name + '.json'
-        call_command('redcap','fixture',get_filename(csv_file_name1),
-                    get_filename(csv_file_name2),'mysite')
+        call_command('redcap','fixture',get_filename(csv_file_name1), get_filename(csv_file_name2),'mysite', model_filename=os.path.join(os.path.dirname(get_filename(csv_file_name1)), 'models.py'))
         cmp_file = open(get_filename(cmp_file_name))
         for line1, line2 in izip(open(get_filename('fixtures.json'),'r'),
                                     open(get_filename(cmp_file_name),'r')):
@@ -215,7 +214,7 @@ class RedcapTestCase(TestCase):
         fileName = 'multi_form_with_rep_fields'
         csv_fileName = fileName + '.csv'
         cmp_fileName = 'cmp_' + fileName + '.py'
-        call_command('redcap','inspect',get_filename(csv_fileName))
+        call_command('redcap','inspect',get_filename(csv_fileName), model_filename=os.path.join(os.path.dirname(get_filename(csv_fileName)), 'models.py'))
         cmp_file = open(get_filename(cmp_fileName))
         for line1, line2 in izip(open(get_filename('models.py'),'r'),open(get_filename(cmp_fileName),'r')):
             self.assertEqual(line1,line2)
@@ -224,7 +223,7 @@ class RedcapTestCase(TestCase):
         fileName = 'single_form_with_rep_fields_start_with_repeat'
         csv_fileName = fileName + '.csv'
         cmp_fileName = 'cmp_' + fileName + '.py'
-        call_command('redcap','inspect',get_filename(csv_fileName))
+        call_command('redcap','inspect',get_filename(csv_fileName), model_filename=os.path.join(os.path.dirname(get_filename(csv_fileName)), 'models.py'))
         cmp_file = open(get_filename('cmp_' + fileName + '.py'))
         for line1, line2 in izip(open(get_filename('models.py'),'r'),open(get_filename(cmp_fileName),'r')):
             self.assertEqual(line1,line2)
@@ -236,7 +235,7 @@ class RedcapTestCase(TestCase):
 #        fileName = 'single_form_with_rep_fields_many_nested'
 #        csv_fileName = fileName + '.csv'
 #        cmp_fileName = 'cmp_' + fileName + '.py'
-#        call_command('redcap','inspect',get_filename(csv_fileName))
+#        call_command('redcap','inspect',get_filename(csv_fileName), model_filename=os.path.join(os.path.dirname(get_filename(csv_fileName)), 'models.py'))
 #        cmp_file = open(get_filename('cmp_' + fileName + '.py'))
 #        for line1, line2 in izip(open(get_filename('models.py'),'r'),open(get_filename(cmp_fileName),'r')):
 #            self.assertEqual(line1,line2)
@@ -245,7 +244,7 @@ class RedcapTestCase(TestCase):
         fileName = 'multi_form_without_rep_fields'
         csv_fileName = fileName + '.csv'
         cmp_fileName = 'cmp_' + fileName + '.py'
-        call_command('redcap','inspect',get_filename(csv_fileName))
+        call_command('redcap','inspect',get_filename(csv_fileName), model_filename=os.path.join(os.path.dirname(get_filename(csv_fileName)), 'models.py'))
         cmp_file = open(get_filename('cmp_' + fileName + '.py'))
         for line1, line2 in izip(open(get_filename('models.py'),'r'),open(get_filename(cmp_fileName),'r')):
             self.assertEqual(line1,line2)
@@ -254,7 +253,7 @@ class RedcapTestCase(TestCase):
         fileName = 'single_form_without_rep_fields'
         csv_fileName = fileName + '.csv'
         cmp_fileName = 'cmp_' + fileName + '.py'
-        call_command('redcap','inspect',get_filename(csv_fileName))
+        call_command('redcap','inspect',get_filename(csv_fileName), model_filename=os.path.join(os.path.dirname(get_filename(csv_fileName)), 'models.py'))
         cmp_file = open(get_filename('cmp_' + fileName + '.py'))
         for line1, line2 in izip(open(get_filename('models.py'),'r'),open(get_filename(cmp_fileName),'r')):
             self.assertEqual(line1,line2)

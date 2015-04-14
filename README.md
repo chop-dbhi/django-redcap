@@ -46,7 +46,7 @@ INSTALLED_APPS = (
 Commands
 --------
 
-Djredcap and djfixture function alongside one another. For both of them to work correctly, they must be run in the correct order. djredcap should be run first. Djredcap creates an intermediary json file that describes each form, including each field and its information, from the redcap data dictionary submitted in djredcap. This json file is used in djfixture to describe the models.py file.
+Djconvert and djfixture function alongside one another. For both of them to work correctly, they must be run in the correct order. djconvert should be run first. Djredcap creates an intermediary json file that describes each form, including each field and its information, from the redcap data dictionary submitted in djconvert. This json file is used in djfixture to describe the models.py file.
 
 Commands are executed using the `redcap` command with a sub-command, e.g.:
 
@@ -58,7 +58,7 @@ Commands are executed using the `redcap` command with a sub-command, e.g.:
 
 The basic command. The inspect command takes in a redcap data dictionary and outputs a
 models.py file based on the dictionary, along with an intermediate JSON file describing 
-the data dictionary.
+the data dictionary. For better control over the output of the subcommands, it is recommended to use json and models together to replace inspect. Inspect writes two files, making it messy to control where both are written.
 ```bash
 ./manage.py redcap inspect path/to/exported/data_dictionary.csv
 ```
@@ -67,6 +67,8 @@ the data dictionary.
 The convert command takes the data dictionary and directly writes to models.py. 
 The json file that would normally be output (inspect) is not created.
 
+Use -o or -output-file to provide a path for models.py.
+
 ```bash
 ./manage.py redcap convert path/to/exported/data_dictionary.csv
 ```
@@ -74,12 +76,17 @@ The json file that would normally be output (inspect) is not created.
 
 The models command takes the intermediate JSON file and writes a models.py file based on it.
 
+Use -o or -output-file to provide a path for models.py.
+
 ```bash
 ./manage.py redcap models path/to/generated/json_file.json
 ```
 **json**
 
 The json command takes the data dictionary from redcap as input and outputs an intermediate JSON file.
+
+Use -o or -output-file to provide a path for the json file.
+
 ```bash
 ./manage.py redcap json path/to/exported/data_dictionary.csv
 ```
@@ -87,6 +94,9 @@ The json command takes the data dictionary from redcap as input and outputs an i
 
 The fixture command creates a django data fixture from a redcap data file, a JSON intermediate file(generated
 from inspect or json commands) and a django project name. The name of the outputted file is fixtures.json.
+
+Use -o or -output-file to provide a path for fixtures.json.
+
 ```bash
 ./manage.py redcap fixture path/to/exported/data_file.csv path/to/generated/json_file.json django_project_name
 ```
@@ -116,34 +126,34 @@ commands, and the name of your django project.
 How it works
 -------------
 
-djredcap
+djconvert
 ========
 
-There are 2 main parts to djredcap. The function(csv_2_json) that generates the json file from the 
+There are 2 main parts to djconvert. The function(csv_2_json) that generates the json file from the 
 data dictionary, and the function(json_2_dj) that generates the models.py file from the intermediate json
 file.
 
 **csv_2_json**
 
-[csv_2_json](https://github.com/cbmi/django-redcap/blob/master/djredcap/management/subcommands/djredcap.py#L51), in the simplest terms, parses through the data dictionary, line by line, and groups the fields in the dictionary by their form name, while retaining the rest of the field information.
+[csv_2_json](https://github.com/cbmi/django-redcap/blob/master/djredcap/management/subcommands/djconvert.py#L51), in the simplest terms, parses through the data dictionary, line by line, and groups the fields in the dictionary by their form name, while retaining the rest of the field information.
 
 *Non-repeating fields*
 Non-repeating fields are simple. When a new form is found by reading the fields information, a json syntactic form, 
-which the form's information and empty list of fields, is generated([generate_json_form](https://github.com/cbmi/django-redcap/blob/master/djredcap/management/subcommands/djredcap.py#L405)). Each field in that form is added to that list([generate_json_field](https://github.com/cbmi/django-redcap/blob/master/djredcap/management/subcommands/djredcap.py#L415)). Once a different form is started, [the previous form is printed](https://github.com/cbmi/django-redcap/blob/master/djredcap/management/subcommands/djredcap.py#L93).
+which the form's information and empty list of fields, is generated([generate_json_form](https://github.com/cbmi/django-redcap/blob/master/djredcap/management/subcommands/djconvert.py#L405)). Each field in that form is added to that list([generate_json_field](https://github.com/cbmi/django-redcap/blob/master/djredcap/management/subcommands/djconvert.py#L415)). Once a different form is started, [the previous form is printed](https://github.com/cbmi/django-redcap/blob/master/djredcap/management/subcommands/djconvert.py#L93).
 
 *Repeating fields*
 This is done by constructing lists of lists of lists of fields, called repeating_rows, based on their form names 
 and if they are a part of repeating groups. A repeating group is a group of fields, where the first field in the group has startrepeat "num" "new form name" and the last field in the group has endrepeat. A repeating group can be 
-nested inside another repeating group, and so on. repeating_rows mirrors the nesting, by creating the same relationship inside lists of lists([last_inner_append](https://github.com/cbmi/django-redcap/blob/master/djredcap/management/subcommands/djredcap.py#L301)). 
+nested inside another repeating group, and so on. repeating_rows mirrors the nesting, by creating the same relationship inside lists of lists([last_inner_append](https://github.com/cbmi/django-redcap/blob/master/djredcap/management/subcommands/djconvert.py#L301)). 
 
-Once all the endrepeats have been matched up with startrepeats(there is no more repeating fields), repeating_rows is cleaned of any junk fields(clean_list,blank fields created by last_inner_append or fields that only contain "endrepeat") and each form is related to the form it is nested inside by create_form_relations. Each list in repeating_rows is then ordered by appearance in the list([order_list](https://github.com/cbmi/django-redcap/blob/master/djredcap/management/subcommands/djredcap.py#L232)).
+Once all the endrepeats have been matched up with startrepeats(there is no more repeating fields), repeating_rows is cleaned of any junk fields(clean_list,blank fields created by last_inner_append or fields that only contain "endrepeat") and each form is related to the form it is nested inside by create_form_relations. Each list in repeating_rows is then ordered by appearance in the list([order_list](https://github.com/cbmi/django-redcap/blob/master/djredcap/management/subcommands/djconvert.py#L232)).
 
-Repeating_rows is then appended to all_repeats, which holds all the repeating rows in the current form. Once a new field form is encountered, all_repeats is printed([95](https://github.com/cbmi/django-redcap/blob/master/djredcap/management/subcommands/djredcap.py#L94)).
+Repeating_rows is then appended to all_repeats, which holds all the repeating rows in the current form. Once a new field form is encountered, all_repeats is printed([95](https://github.com/cbmi/django-redcap/blob/master/djredcap/management/subcommands/djconvert.py#L94)).
 
 
 **json_2_dj**
 
-[json_2_dj](https://github.com/cbmi/django-redcap/blob/master/djredcap/management/subcommands/djredcap.py#L440) works by loading in each json form, read from the intermediary created before, and reading each field in it. 
+[json_2_dj](https://github.com/cbmi/django-redcap/blob/master/djredcap/management/subcommands/djconvert.py#L440) works by loading in each json form, read from the intermediary created before, and reading each field in it. 
 The first thing printed is the form information(class form_name). If the form name contains a ‘~’, then it was a 
 repeating form and a foreign key field is created. A string, to be printed, is created based on the fields 
 “attributes”, like field type, field note, field label, field name, etc. The field is then printed to the models.py.
@@ -165,6 +175,6 @@ Once all forms have been parsed and the fixture list has been populated, it is p
 
 
 
-More in-depth comments can be found in djredcap and djfixture.
+More in-depth comments can be found in djconvert and djfixture.
 
 

@@ -36,7 +36,7 @@ class Command(BaseCommand):
     # Add a command line option -m allowing the user to set a filename for models.
     # Filename is relative to the current working directory.
     option_list = BaseCommand.option_list + (
-        make_option('-m', '--model-file', dest='model_filename',
+        make_option('-o', '--output-file', dest='output_filename',
                     help='Filename to which models are written'),
     )
 
@@ -50,4 +50,4 @@ class Command(BaseCommand):
         reader = csv.DictReader(fin, fieldnames=header_keys, dialect=dialect)
 
         reader.next()
-        fileName = djconvert.json_2_dj(self, file_name, options['model_filename'])
+        fileName = djconvert.json_2_dj(self, file_name, options['output_filename'])

@@ -56,7 +56,7 @@ def csv_2_json(self, reader, file_name, output_filename=None):
     
     # If a filename is not provided, use the CWD.
     if not output_filename:
-        fout = open(os.path.join(os.getcwd(), new_file_name), "w+")
+        fout = open(os.path.join(os.getcwd(), new_file_name), 'w+')
     else:
         fout = open(os.path.join(os.getcwd(), output_filename))
 

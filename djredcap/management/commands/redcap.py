@@ -46,7 +46,7 @@ class Command(BaseCommand):
         """
         if len(argv) > 2 and not argv[2].startswith('-') and \
                 argv[2] in self.subcommands.keys():
-            subcommand = self.subcommands[argv[2]]
+            subcommand = argv[2]
             klass = self.get_subcommand(subcommand)
             parser = OptionParser(prog=argv[0],
                                   usage=klass.usage('{0} {1}'

@@ -44,7 +44,7 @@ class Command(BaseCommand):
     option_list = BaseCommand.option_list + (
         make_option('--JSON', action='store', dest='json',
                     help='Print a JSON file when using convert, default no'),
-        make_option('-m', '--model-file', dest='model_filename',
+        make_option('-o', '--output-file', dest='output_filename',
                     help='Filename to which models are written'),
     )
 
@@ -62,7 +62,7 @@ class Command(BaseCommand):
 
         file_name = djconvert.csv_2_json(self, reader, file_name)
         file_name1 = file_name
-        djconvert.json_2_dj(self, file_name, options['model_filename'])
+        djconvert.json_2_dj(self, file_name, options['output_filename'])
         if json_filename:
             os.rename(file_name1, json_filename)
         else:

@@ -48,13 +48,17 @@ db_module = 'django.db'
 args = 'file_name'
 
 
-def csv_2_json(self, reader, file_name):
+def csv_2_json(self, reader, file_name, output_filename=None):
     """
     Function that converts csv file to valid json.
     """
-    new_file_name = remove_file_extension(self, os.path.basename(file_name))
-    fout = open(os.path.join(os.path.dirname(file_name),
-                             new_file_name + '.json'), "w+")
+    new_file_name = remove_file_extension(self, os.path.basename(file_name)) + '.json'
+    
+    # If a filename is not provided, use the CWD.
+    if not output_filename:
+        fout = open(os.path.join(os.getcwd(), new_file_name), "w+")
+    else:
+        fout = open(os.path.join(os.getcwd(), output_filename))
 
     #repeating_rows is a group of repeating rows located within a form.
     #all_repeats is all of the repeating rows for that form.
@@ -437,12 +441,12 @@ def generate_json_field(self, row, json_str):
     return json.dumps(data)
 
 
-def json_2_dj(self, file_name, model_filename):
-    new_file_name = remove_file_extension(self, os.path.basename(file_name))
-    if model_filename == None:
-        fout = sys.stdout
+def json_2_dj(self, file_name, output_filename=None):
+    # If no output filename is given, use models.py in the CWD.
+    if not output_filename:
+        fout = open(os.path.join(os.getcwd(), 'models.py'), 'w+')
     else:
-        fout = open(os.path.join(os.getcwd(), model_filename), 'w+')
+        fout = open(os.path.join(os.getcwd(), output_filename), 'w+')
 
     fout.write('from %s import models' % self.db_module)
     fout.write('\n')
